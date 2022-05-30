@@ -1,13 +1,135 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import "~normalize.css";
+@import "~@blueprintjs/core/lib/css/blueprint.css";
+@import "~@blueprintjs/icons/lib/css/blueprint-icons.css";
+@import "~@blueprintjs/popover2/lib/css/blueprint-popover2.css";
+
+:root {
+  --black: #111418;
+  --white: #FFFFFF;
+
+  --dark-gray1: #1C2127;
+  --dark-gray2: #252A31;
+  --dark-gray3: #2F343C;
+  --dark-gray4: #383E47;
+  --dark-gray5: #404854;
+
+  --gray1: #5F6B7C;
+  --gray2: #738091;
+  --gray3: #8F99A8;
+  --gray4: #ABB3BF;
+  --gray5: #C5CBD3;
+
+  --light-gray1: #D3D8DE;
+  --light-gray2: #DCE0E5;
+  --light-gray3: #E5E8EB;
+  --light-gray4: #EDEFF2;
+  --light-gray5: #F6F7F9;
+
+  --titlebar-colour: var(--light-gray2);
+  --body-colour: var(--light-gray5);
+  --tab-colour: var(--light-gray4);
+  --border-colour: var(--light-gray1);
+
+  --regular-text: var(--black);
+  --subtle-text: var(--gray1);
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.bp4-dark {
+  --titlebar-colour: var(--dark-gray1);
+  --body-colour: var(--dark-gray3);
+  --tab-colour: var(--dark-gray2);
+  --border-colour: var(--dark-gray4);
+
+  --regular-text: var(--white);
+  --subtle-text: var(--gray4);
+}
+
+.titlebar {
+  padding: 5px;
+  display: flex;
+  flex-direction: row;
+  background-color: var(--titlebar-colour);
+  width: 100%;
+  height: fit-content;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-colour);
+  color: var(--subtle-text)
+}
+
+.titlebar > .titlebar\:left > * {
+  margin-left: 0px;
+  margin-right: 5px;
+}
+
+.titlebar > .titlebar\:left, .titlebar > .titlebar\:right {
+  display: flex;
+  flex-direction: row;
+}
+
+.titlebar > .titlebar\:right > * {
+  margin-left: 5px;
+  margin-right: 0px;
+}
+
+html, body {
+  height: 100%;
+}
+
+.content {
+  display: flex;
+  flex-grow: 1;
+  color: var(--regular-text);
+}
+
+#root {
+  background-color: var(--body-colour);
+  height: 100%;
+  border: 1px solid var(--border-colour);
+  display: flex;
+  flex-direction: column;
+  color: var(--regular-text);
+}
+
+button, .titlebar {
+  user-select: none;
+}
+
+.minimalTextarea {
+  border-style: none;
+  border-color: Transparent;
+  overflow: auto;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  resize: none;
+  padding: 10px;
+  line-height: 2.5ch;
+  color: var(--regular-text);
+}
+
+.titlebar\:text {
+  text-align: center;
+  vertical-align: middle;
+  line-height: 24px;
+  font-weight: 500;
+  color: var(--subtle-text);
+}
+
+.tab\:bar {
+  background: var(--tab-colour);
+  border-bottom: 1px solid var(--border-colour);
+}
+
+.tab {
+  display: flex;
+  flex-grow: 1;
+  padding: 0;
+  margin: 0 !important;
+  justify-content: center;
+}
+
+.tab\:icon {
+  margin-top: 7px;
 }
