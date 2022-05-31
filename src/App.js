@@ -7,6 +7,17 @@ import { readTextFile, writeFile } from "@tauri-apps/api/fs";
 import { Menu, MenuItem, Divider, MenuDivider, Dialog, Button, ButtonGroup, Classes } from "@blueprintjs/core";
 import { ContextMenu2, Tooltip2 } from "@blueprintjs/popover2";
 
+// To do:
+// Settings:
+//  Theme selector: Light/Dark/Custom?
+//  Text wrapping: Bool
+// 
+// Open Functionality
+// New Functionality
+// Encrypting Contents Functionality 
+// 
+// Etc
+
 export default function App() {
   const [savePromptOpen, setSavePromptOpen] = React.useState(false);
 
