@@ -1,6 +1,6 @@
 # Tauri Notepad
 
-### NOT CURRENTLY WORKING - I AM DEVELOPING IT
+### Not currently working - it is being developed
 
 A minimal text editor 
 
