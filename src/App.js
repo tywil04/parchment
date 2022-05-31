@@ -1,10 +1,18 @@
 import React from "react";
+
 import { appWindow } from '@tauri-apps/api/window'
+import { save as saveDialog, open as openDialog } from "@tauri-apps/api/dialog"
+import { readTextFile, writeFile } from "@tauri-apps/api/fs";
+
 import { Menu, MenuItem, Divider, MenuDivider, Dialog, Button, ButtonGroup, Classes } from "@blueprintjs/core";
 import { ContextMenu2, Tooltip2 } from "@blueprintjs/popover2";
 
 export default function App() {
-  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [savePromptOpen, setSavePromptOpen] = React.useState(false);
+
+  const fileNameRef = React.useRef();
+  const statisticsDisplayRef = React.useRef();
+  const textEditorRef = React.useRef();
 
   // Disable default context menu so a custom one can be used via BlueprintJS/popover2's ContextMenu2
   window.onContextMenu = (event) => {
@@ -12,14 +20,52 @@ export default function App() {
     event.stopPropagation();
   };
 
-  const statisticsDisplayRef = React.useRef(); // The reference for the element displaying word and character stats
-
   // Handles the logic behind the stats display
-  const onCurrentTextChanged = (event) => {
+  const calculateWordsAndCharacters = (event) => {
     var words = event.target.value.trim().replace("\n", " ").split(/(\s+)/).filter((word) => word.trim().length > 0).length;
     var characters = event.target.value.replace("\n", "").replace(" ", "").length
     statisticsDisplayRef.current.innerText = `${words} Words, ${characters} Characters`
   }
+
+  const saveAs = () => {
+    saveDialog().then((filePath) => {
+      writeFile({contents: textEditorRef.current.value, path: filePath});
+      fileNameRef.current.innerText = filePath.trim();
+    })
+  }
+
+  const save = () => {
+    if (fileNameRef.current.innerText.trim() != "Untitled") {
+      try {
+        writeFile({contents: textEditorRef.current.value, path: fileNameRef.current.innerText.trim()});
+      } catch {
+        saveAs();
+      }
+    } else {
+      saveAs();
+    }
+  }
+
+  // const openFile = () => {
+  //   openDialog().then((filePath) => {
+  //     readTextFile(filePath).then((text) => 
+  //       textEditorRef.current.value = text
+  //     )
+  //     fileNameRef.current.innerText = filePath;
+  //   })
+  // }
+
+  // const newFile = () => {
+  //   console.log(textEditorRef.current.value.trim())
+  //   if (textEditorRef.current.value.trim() === "") {
+  //     fileNameRef.current.innerText = "Untitled"
+  //     textEditorRef.current.value = "";
+  //   } else {
+  //     saveFile(textEditorRef.current.value)
+  //     fileNameRef.current.innerText = "Untitled"
+  //     textEditorRef.current.value = "";
+  //   }
+  // }
 
   return (
     <>
@@ -36,8 +82,19 @@ export default function App() {
           <div className="titlebar:left">
             <ButtonGroup minimal small>
               <Button small text="Open" className="titlebar:button"/>
+            </ButtonGroup>
+
+            <Divider/>
+            
+            <ButtonGroup minimal small>
               <Button small text="New" className="titlebar:button"/>
-              <Button small text="Save" className="titlebar:button"/>
+            </ButtonGroup>
+
+            <Divider/>
+
+            <ButtonGroup minimal small>
+              <Button small text="Save" className="titlebar:button" onClick={save}/>
+              <Button small text="Save as" className="titlebar:button" onClick={saveAs}/>
             </ButtonGroup>
           </div>
 
@@ -67,7 +124,7 @@ export default function App() {
         </div>
         
         <div className="titlebar:lower">
-          <span className="titlebar:text titlebar:lower:left">Untitled 1</span>
+          <span ref={fileNameRef} className="titlebar:text titlebar:lower:left">Untitled</span>
           <span ref={statisticsDisplayRef} className="titlebar:text titlebar:lower:right">0 Words,  0 Characters</span>
         </div>
       </ContextMenu2>
@@ -77,7 +134,6 @@ export default function App() {
         className="content"
         content={
           <Menu>
-            <MenuItem icon="modal" text="Dialog Test" onClick={() => setDialogOpen(true)}/>
             <MenuItem icon="moon" text="Toggle Theme" onClick={() => document.querySelector("body").classList.toggle("bp4-dark")}/>
             <MenuDivider/>
             <MenuItem text="Window Controls">
@@ -88,25 +144,26 @@ export default function App() {
           </Menu>
         }>
 
-        <textarea spellCheck={false} onInput={onCurrentTextChanged}></textarea>
+        <textarea ref={textEditorRef} spellCheck={false} onChange={calculateWordsAndCharacters}></textarea>
       </ContextMenu2>      
 
 
-      <Dialog isOpen={dialogOpen} onClose={() => setDialogOpen(false)}>
+      <Dialog onClose={() => setSavePromptOpen(false)}>
         <div className={Classes.DIALOG_BODY}>
           <p>
             <strong>
-              Dialog Testing
+              Save
             </strong>
           </p>
           <p>
-            This is a working demo of a dialog. This will be used to prompt the user for information. Such as a password to Encrypt/Decrypt content
+            What would you like to do with this file? You can delete it, save it or continue editing it.
           </p>
         </div>
         <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button small text="Close" onClick={() => setDialogOpen(false)}/>
-            <Button small intent={"primary"} text="Confirm" onClick={() => setDialogOpen(false)}/>
+            <Button small intent="danger" text="Delete"/>
+            <Button small intent="primary" text="Save"/>
+            <Button small text="Cancel"/>
           </div>
         </div>
       </Dialog>
