@@ -85,7 +85,7 @@ export default function App() {
             </ButtonGroup>
 
             <Divider/>
-            
+
             <ButtonGroup minimal small>
               <Button small text="New" className="titlebar:button"/>
             </ButtonGroup>
@@ -144,7 +144,7 @@ export default function App() {
           </Menu>
         }>
 
-        <textarea ref={textEditorRef} spellCheck={false} onChange={calculateWordsAndCharacters}></textarea>
+        <textarea ref={textEditorRef} wrap="soft" spellCheck={false} onChange={calculateWordsAndCharacters} className="texteditor texteditor:nowrap"></textarea>
       </ContextMenu2>      
 
 

@@ -31,7 +31,7 @@ html, body {
 
   --titlebar-colour: var(--light-gray2);
   --body-colour: var(--light-gray5);
-  --tab-colour: var(--light-gray4);
+  --titlebar-lower-colour: var(--light-gray4);
   --border-colour: var(--light-gray1);
 
   --regular-text: var(--black);
@@ -41,11 +41,20 @@ html, body {
 .bp4-dark {
   --titlebar-colour: var(--dark-gray1);
   --body-colour: var(--dark-gray3);
-  --tab-colour: var(--dark-gray2);
+  --titlebar-lower-colour: var(--dark-gray2);
   --border-colour: var(--dark-gray4);
 
   --regular-text: var(--white);
   --subtle-text: var(--gray4);
+}
+
+#root {
+  background-color: var(--body-colour);
+  height: 100%;
+  border: 1px solid var(--border-colour);
+  display: flex;
+  flex-direction: column;
+  color: var(--regular-text);
 }
 
 .titlebar {
@@ -58,6 +67,7 @@ html, body {
   justify-content: space-between;
   border-bottom: 1px solid var(--border-colour);
   position: fixed;
+  user-select: none;
 }
 
 .titlebar > .titlebar\:left > * {
@@ -89,7 +99,7 @@ html, body {
 }
 
 .titlebar\:lower {
-  background: var(--tab-colour);
+  background: var(--titlebar-lower-colour);
   width: 100%;
   position: fixed;
   margin-top: 35px;
@@ -97,6 +107,7 @@ html, body {
   border-bottom: 1px solid var(--border-colour);
   padding-left: 12px;
   padding-right: 12px;
+  user-select: none;
 }
 
 .titlebar\:lower\:right {
@@ -116,20 +127,7 @@ html, body {
   margin-top: calc(35px + 24px);
 }
 
-#root {
-  background-color: var(--body-colour);
-  height: 100%;
-  border: 1px solid var(--border-colour);
-  display: flex;
-  flex-direction: column;
-  color: var(--regular-text);
-}
-
-button, .titlebar {
-  user-select: none;
-}
-
-textarea {
+.texteditor {
   border-style: none;
   border-color: Transparent;
   overflow: auto;
@@ -141,4 +139,37 @@ textarea {
   padding: 15px;
   line-height: 2.5ch;
   color: var(--regular-text);
+  cursor: auto;
+}
+
+.texteditor\:nowrap {
+  white-space: pre;
+  overflow-wrap: normal;
+}
+
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--titlebar-colour);
+  border-radius: 0px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--titlebar-lower-colour);
+  position: absolute;
+}
+
+::-webkit-scrollbar-track:vertical, ::-webkit-scrollbar-thumb:vertical, ::-webkit-scrollbar-corner {
+  border-left: 1px solid var(--border-colour);
+}
+
+::-webkit-scrollbar-track:horizontal, ::-webkit-scrollbar-thumb:horizontal, ::-webkit-scrollbar-corner {
+  border-top: 1px solid var(--border-colour);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--titlebar-lower-colour);
 }
