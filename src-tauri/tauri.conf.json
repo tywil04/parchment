@@ -7,7 +7,7 @@
     "distDir": "../build"
   },
   "package": {
-    "productName": "password-manager-test",
+    "productName": "tauri-notepad",
     "version": "0.1.0"
   },
   "tauri": {
@@ -29,7 +29,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tywil.tauritest",
+      "identifier": "com.tywil.taurinotepad",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -56,10 +56,10 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
+        "height": 760,
         "resizable": true,
-        "title": "Password Manager Test",
-        "width": 800,
+        "title": "Tauri Notepad",
+        "width": 580,
         "decorations": false
       }
     ]
