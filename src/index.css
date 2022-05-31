@@ -3,6 +3,10 @@
 @import "~@blueprintjs/icons/lib/css/blueprint-icons.css";
 @import "~@blueprintjs/popover2/lib/css/blueprint-popover2.css";
 
+html, body {
+  height: 100%;
+}
+
 :root {
   --black: #111418;
   --white: #FFFFFF;
@@ -53,12 +57,12 @@
   height: fit-content;
   justify-content: space-between;
   border-bottom: 1px solid var(--border-colour);
-  color: var(--subtle-text)
+  position: fixed;
 }
 
 .titlebar > .titlebar\:left > * {
   margin-left: 0px;
-  margin-right: 5px;
+  margin-right: 7px;
 }
 
 .titlebar > .titlebar\:left, .titlebar > .titlebar\:right {
@@ -66,19 +70,50 @@
   flex-direction: row;
 }
 
-.titlebar > .titlebar\:right > * {
-  margin-left: 5px;
-  margin-right: 0px;
+.titlebar\:button {
+  color: var(--subtle-text) !important;
+  font-weight: 500; 
 }
 
-html, body {
-  height: 100%;
+.titlebar > .titlebar\:right > * {
+  margin-left: 7px;
+  margin-right: 2px;
+}
+
+.titlebar\:text {
+  text-align: center;
+  vertical-align: middle;
+  line-height: 24px;
+  font-weight: 400;
+  color: var(--subtle-text);
+}
+
+.titlebar\:lower {
+  background: var(--tab-colour);
+  width: 100%;
+  position: fixed;
+  margin-top: 35px;
+  height: 24px;
+  border-bottom: 1px solid var(--border-colour);
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.titlebar\:lower\:right {
+  float: right;
+}
+
+.titlebar\:lower\:left {
+  float: left;
 }
 
 .content {
   display: flex;
+  flex-direction: column;
   flex-grow: 1;
   color: var(--regular-text);
+  overflow: none;
+  margin-top: calc(35px + 24px);
 }
 
 #root {
@@ -94,7 +129,7 @@ button, .titlebar {
   user-select: none;
 }
 
-.minimalTextarea {
+textarea {
   border-style: none;
   border-color: Transparent;
   overflow: auto;
@@ -102,34 +137,8 @@ button, .titlebar {
   background: transparent;
   width: 100%;
   height: 100%;
-  overflow: auto;
   resize: none;
-  padding: 10px;
+  padding: 15px;
   line-height: 2.5ch;
   color: var(--regular-text);
-}
-
-.titlebar\:text {
-  text-align: center;
-  vertical-align: middle;
-  line-height: 24px;
-  font-weight: 500;
-  color: var(--subtle-text);
-}
-
-.tab\:bar {
-  background: var(--tab-colour);
-  border-bottom: 1px solid var(--border-colour);
-}
-
-.tab {
-  display: flex;
-  flex-grow: 1;
-  padding: 0;
-  margin: 0 !important;
-  justify-content: center;
-}
-
-.tab\:icon {
-  margin-top: 7px;
 }
