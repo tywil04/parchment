@@ -1,15 +1,25 @@
 import React from "react";
 import { appWindow } from '@tauri-apps/api/window'
-import { Tabs, Tab, Menu, MenuItem, Divider, MenuDivider, Dialog, Button, ButtonGroup, Classes } from "@blueprintjs/core";
+import { Menu, MenuItem, Divider, MenuDivider, Dialog, Button, ButtonGroup, Classes } from "@blueprintjs/core";
 import { ContextMenu2, Tooltip2 } from "@blueprintjs/popover2";
 
 export default function App() {
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
+  // Disable default context menu so a custom one can be used via BlueprintJS/popover2's ContextMenu2
   window.onContextMenu = (event) => {
     event.preventDefault(); 
     event.stopPropagation();
   };
+
+  const statisticsDisplayRef = React.useRef(); // The reference for the element displaying word and character stats
+
+  // Handles the logic behind the stats display
+  const onCurrentTextChanged = (event) => {
+    var words = event.target.value.trim().replace("\n", " ").split(/(\s+)/).filter((word) => word.trim().length > 0).length;
+    var characters = event.target.value.replace("\n", "").replace(" ", "").length
+    statisticsDisplayRef.current.innerText = `${words} Words, ${characters} Characters`
+  }
 
   return (
     <>
@@ -25,20 +35,13 @@ export default function App() {
         <div data-tauri-drag-region className="titlebar">
           <div className="titlebar:left">
             <ButtonGroup minimal small>
-              <Button small text="Open"/>
-              <Button small text="New"/>
-              <Button small text="Save"/>
+              <Button small text="Open" className="titlebar:button"/>
+              <Button small text="New" className="titlebar:button"/>
+              <Button small text="Save" className="titlebar:button"/>
             </ButtonGroup>
           </div>
 
           <div className="titlebar:right">
-            <ButtonGroup minimal small>
-              <Button small text="Preview"/>
-              <Button small text="Edit" active/>
-            </ButtonGroup>
-
-            <Divider/>
-
             <ButtonGroup minimal small>
               <Tooltip2 hoverOpenDelay={350} content="Text Search">
                 <Button small icon="search-text"/>
@@ -46,10 +49,6 @@ export default function App() {
 
               <Tooltip2 hoverOpenDelay={350} content="Encrypt Contents">
                 <Button small icon="lock"/>
-              </Tooltip2>
-
-              <Tooltip2 hoverOpenDelay={350} content="Toggle Theme">
-                <Button small icon="moon" onClick={() => document.querySelector("body").classList.toggle("bp4-dark")}/>
               </Tooltip2>
 
               <Tooltip2 hoverOpenDelay={350} content="Settings">
@@ -66,7 +65,13 @@ export default function App() {
             </ButtonGroup>
           </div>
         </div>
+        
+        <div className="titlebar:lower">
+          <span className="titlebar:text titlebar:lower:left">Untitled 1</span>
+          <span ref={statisticsDisplayRef} className="titlebar:text titlebar:lower:right">0 Words,  0 Characters</span>
+        </div>
       </ContextMenu2>
+
 
       <ContextMenu2
         className="content"
@@ -83,7 +88,7 @@ export default function App() {
           </Menu>
         }>
 
-        <textarea className="minimalTextarea"></textarea>
+        <textarea spellCheck={false} onInput={onCurrentTextChanged}></textarea>
       </ContextMenu2>      
 
 
