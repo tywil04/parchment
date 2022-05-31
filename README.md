@@ -9,8 +9,6 @@ This project uses the following:
 - BlueprintJS a fantastic component library for React
 - Tauri a Rust wrapper to create desktop applications using JS/HTML/CSS
 
-Windows 11 Dark Mode 
-![Windows 11 Dark Mode](/screenshots/win11-dark.png)
+Windows 11 Dark Mode ![Windows 11 Dark Mode](/screenshots/win11-dark.png)
 
-Windows 11 Light Mode 
-![Windows 11 Light Mode](/screenshots/win11-light.png)
+Windows 11 Light Mode ![Windows 11 Light Mode](/screenshots/win11-light.png)
