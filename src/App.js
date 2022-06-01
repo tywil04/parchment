@@ -14,7 +14,6 @@ import { ContextMenu2, Tooltip2 } from "@blueprintjs/popover2";
 //  Text wrapping: Bool
 // 
 // Open Functionality
-// New Functionality
 // Encrypting Contents Functionality 
 // 
 // Etc
@@ -131,18 +130,6 @@ export default function App() {
   //     )
   //     fileNameRef.current.innerText = filePath;
   //   })
-  // }
-
-  // const newFile = () => {
-  //   console.log(textEditorRef.current.value.trim())
-  //   if (textEditorRef.current.value.trim() === "") {
-  //     fileNameRef.current.innerText = "Untitled"
-  //     textEditorRef.current.value = "";
-  //   } else {
-  //     saveFile(textEditorRef.current.value)
-  //     fileNameRef.current.innerText = "Untitled"
-  //     textEditorRef.current.value = "";
-  //   }
   // }
 
   return (
