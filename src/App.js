@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from 'react-dom/client';
 
 import { appWindow } from '@tauri-apps/api/window'
 import { save as saveDialog, open as openDialog } from "@tauri-apps/api/dialog"
@@ -19,8 +20,7 @@ import { ContextMenu2, Tooltip2 } from "@blueprintjs/popover2";
 // Etc
 
 export default function App() {
-  const [savePromptOpen, setSavePromptOpen] = React.useState(false);
-
+  const [currentFilePath, setCurrentFilePath] = React.useState("");
   const fileNameRef = React.useRef();
   const statisticsDisplayRef = React.useRef();
   const textEditorRef = React.useRef();
@@ -38,22 +38,70 @@ export default function App() {
     statisticsDisplayRef.current.innerText = `${words} Words, ${characters} Characters`
   }
 
-  const saveAs = () => {
-    saveDialog().then((filePath) => {
-      writeFile({contents: textEditorRef.current.value, path: filePath});
-      fileNameRef.current.innerText = filePath.trim();
+  // Renders a dialog that returns a promise. A success is the save button being pressed, a failure is the delete button being pressed
+  const runDiscardDialog = () => {
+    return new Promise((success, failure) => {
+      const random = Math.random().toString(16).substr(2, 14);
+      ReactDOM.createRoot(document.querySelector("#empty")).render(
+        <div id={random}>
+          <Dialog usePortal={false} title="Discard Contents" isOpen={true} onClose={() => document.getElementById(random).remove()}>
+            <div className={Classes.DIALOG_BODY}>
+              <p>
+                What would you like to do with this file? You can discard it, save it or continue editing it.
+              </p>
+            </div>
+            <div className={Classes.DIALOG_FOOTER}>
+              <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+                <Button small text="Continue Editing" onClick={() => {document.getElementById(random).remove()}}/>
+                <Button small intent="danger" text="Discard" onClick={() => {failure(); document.getElementById(random).remove()}}/>
+                <Button small intent="primary" text="Save" onClick={() => {success(); document.getElementById(random).remove()}}/>
+              </div>
+            </div>
+          </Dialog>
+        </div>
+      );
     })
   }
 
-  const save = () => {
-    if (fileNameRef.current.innerText.trim() != "Untitled") {
+  // Get file name from path using a regular expression
+  const getFileNameFromPath = (filePath) => filePath.replace(/^.*(\\|\/|\:)/, "");
+
+  const saveFileAs = () => {
+    return saveDialog().then((filePath) => {
+      writeFile({contents: textEditorRef.current.value, path: filePath});
+      fileNameRef.current.innerText = getFileNameFromPath(filePath);
+      setCurrentFilePath(filePath);
+    })
+  }
+
+  const saveFile = () => {
+    if (currentFilePath !== "") {
       try {
-        writeFile({contents: textEditorRef.current.value, path: fileNameRef.current.innerText.trim()});
+        writeFile({contents: textEditorRef.current.value, path: currentFilePath});
       } catch {
-        saveAs();
+        return saveFileAs();
       }
     } else {
-      saveAs();
+      return saveFileAs();
+    }
+  }
+
+  const clearFile = () => {
+    textEditorRef.current.value = "";
+    setCurrentFilePath("");
+    fileNameRef.current.innerText = "untitled";
+  }
+
+  const newFile = () => {
+    if (textEditorRef.current.value !== "") {
+      const test = runDiscardDialog();
+      test.then(
+        () => {
+          const file = saveFile();
+          file.then(clearFile)
+        } ,
+        clearFile,
+      )
     }
   }
 
@@ -98,14 +146,14 @@ export default function App() {
             <Divider/>
 
             <ButtonGroup minimal small>
-              <Button small text="New" className="titlebar:button"/>
+              <Button small text="New" className="titlebar:button" onClick={newFile}/>
             </ButtonGroup>
 
             <Divider/>
 
             <ButtonGroup minimal small>
-              <Button small text="Save" className="titlebar:button" onClick={save}/>
-              <Button small text="Save as" className="titlebar:button" onClick={saveAs}/>
+              <Button small text="Save" className="titlebar:button" onClick={saveFile}/>
+              <Button small text="Save as" className="titlebar:button" onClick={saveFileAs}/>
             </ButtonGroup>
           </div>
 
@@ -135,7 +183,7 @@ export default function App() {
         </div>
         
         <div className="titlebar:lower">
-          <span ref={fileNameRef} className="titlebar:text titlebar:lower:left">Untitled</span>
+          <span ref={fileNameRef} className="titlebar:text titlebar:lower:left">untitled</span>
           <span ref={statisticsDisplayRef} className="titlebar:text titlebar:lower:right">0 Words,  0 Characters</span>
         </div>
       </ContextMenu2>
@@ -157,27 +205,6 @@ export default function App() {
 
         <textarea ref={textEditorRef} wrap="soft" spellCheck={false} onChange={calculateWordsAndCharacters} className="texteditor texteditor:nowrap"></textarea>
       </ContextMenu2>      
-
-
-      <Dialog onClose={() => setSavePromptOpen(false)}>
-        <div className={Classes.DIALOG_BODY}>
-          <p>
-            <strong>
-              Save
-            </strong>
-          </p>
-          <p>
-            What would you like to do with this file? You can delete it, save it or continue editing it.
-          </p>
-        </div>
-        <div className={Classes.DIALOG_FOOTER}>
-          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button small intent="danger" text="Delete"/>
-            <Button small intent="primary" text="Save"/>
-            <Button small text="Cancel"/>
-          </div>
-        </div>
-      </Dialog>
     </>
   );
 }
