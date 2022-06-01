@@ -38,13 +38,26 @@ export default function App() {
     statisticsDisplayRef.current.innerText = `${words} Words, ${characters} Characters`
   }
 
+  // Get file name from path using a regular expression
+  const getFileNameFromPath = (filePath) => filePath.replace(/^.*(\\|\/|\:)/, "");
+
+  const generateRandomString = () => Math.random().toString(16).substr(2, 14);
+
   // Renders a dialog that returns a promise. A success is the save button being pressed, a failure is the delete button being pressed
   const runDiscardDialog = () => {
     return new Promise((success, failure) => {
-      const random = Math.random().toString(16).substr(2, 14);
-      ReactDOM.createRoot(document.querySelector("#empty")).render(
-        <div id={random}>
-          <Dialog usePortal={false} title="Discard Contents" isOpen={true} onClose={() => document.getElementById(random).remove()}>
+      const random = "discard-dialog-" + generateRandomString();
+
+      // Create a div with a random id that will be used to hold the dialog
+      var div = document.createElement("div")
+      div.id = random;
+      document.querySelector("body").appendChild(div);
+
+      // Dialog component
+      const InternalDialog = (props) => {
+        const [open, setOpen] = React.useState(true);
+        return (
+          <Dialog usePortal={false} title="Discard Contents" isOpen={open} onClose={() => setOpen(false)} onClosed={() => document.getElementById(random).remove()}>
             <div className={Classes.DIALOG_BODY}>
               <p>
                 What would you like to do with this file? You can discard it, save it or continue editing it.
@@ -52,19 +65,21 @@ export default function App() {
             </div>
             <div className={Classes.DIALOG_FOOTER}>
               <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-                <Button small text="Continue Editing" onClick={() => {document.getElementById(random).remove()}}/>
-                <Button small intent="danger" text="Discard" onClick={() => {failure(); document.getElementById(random).remove()}}/>
-                <Button small intent="primary" text="Save" onClick={() => {success(); document.getElementById(random).remove()}}/>
+                <Button small text="Continue Editing" onClick={() => setOpen(false)}/>
+                <Button small intent="danger" text="Discard" onClick={() => {setOpen(false); props.failure()}}/>
+                <Button small intent="primary" text="Save" onClick={() => {setOpen(false); props.success()}}/>
               </div>
             </div>
           </Dialog>
-        </div>
+        )
+      }
+
+      // Render the dialog in the div that was created
+      ReactDOM.createRoot(document.getElementById(random)).render(
+        <InternalDialog success={success} failure={failure}/>
       );
     })
   }
-
-  // Get file name from path using a regular expression
-  const getFileNameFromPath = (filePath) => filePath.replace(/^.*(\\|\/|\:)/, "");
 
   const saveFileAs = () => {
     return saveDialog().then((filePath) => {
@@ -94,8 +109,8 @@ export default function App() {
 
   const newFile = () => {
     if (textEditorRef.current.value !== "") {
-      const test = runDiscardDialog();
-      test.then(
+      const discardDialog = runDiscardDialog();
+      discardDialog.then(
         () => {
           const file = saveFile();
           file.then(clearFile)
@@ -103,6 +118,10 @@ export default function App() {
         clearFile,
       )
     }
+  }
+
+  const openFile = () => {
+
   }
 
   // const openFile = () => {
