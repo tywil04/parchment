@@ -4,10 +4,9 @@ import ReactDOM from 'react-dom/client';
 import { appWindow } from '@tauri-apps/api/window'
 import { save as saveDialog, open as openDialog } from "@tauri-apps/api/dialog"
 import { readTextFile, writeFile } from "@tauri-apps/api/fs";
-import { readText as readClipboard, writeText as writeClipboard } from "@tauri-apps/api/clipboard";
 
-import { Menu, MenuItem, Divider, MenuDivider, Dialog, Button, ButtonGroup, Classes } from "@blueprintjs/core";
-import { ContextMenu2, Tooltip2 } from "@blueprintjs/popover2";
+import { Divider, Dialog, Button, ButtonGroup, Classes } from "@blueprintjs/core";
+import { Tooltip2 } from "@blueprintjs/popover2";
 
 // To do:
 // Settings:
@@ -32,7 +31,7 @@ export default function App() {
   const textEditorRef = React.useRef();
 
   // Disable default context menu so a custom one can be used via BlueprintJS/popover2's ContextMenu2
-  window.onContextMenu = (event) => {
+  const noContextMenu = (event) => {
     event.preventDefault(); 
     event.stopPropagation();
   };
@@ -49,8 +48,6 @@ export default function App() {
 
   // Generate a random hexadecimal string
   const generateRandomString = () => Math.random().toString(16).substring(2, 14);
-
-  const toggleTheme = () => document.querySelector("body").classList.toggle("bp4-dark");
 
   // Renders a dialog that returns a promise. A success is the save button being pressed, a failure is the delete button being pressed
   const runDiscardDialog = () => {
@@ -134,7 +131,7 @@ export default function App() {
     if (textEdited === false) {
       clear();
     // If the text has been edited and the text isnt an empty string, then run `runDiscardDialog` and await the response
-    } else if (textEditorRef.current.innerText !== "") {
+    } else {
       runDiscardDialog().then(
         (response) => {
           switch(response) {
@@ -168,7 +165,7 @@ export default function App() {
     if (textEdited === false) {
       open();
     // If the text has been edited and the text isnt an empty string, then run `runDiscardDialog` and await the response
-    } else if (textEditorRef.current.innerText !== "") {
+    } else {
       runDiscardDialog().then(
         (response) => {
           switch(response) {
@@ -186,11 +183,12 @@ export default function App() {
   }
 
   const closeApplication = () => {
+    console.log("x")
     // If text has not been edited, close application
     if (textEdited === false) {
       appWindow.close();
     // If the text has been edited and the text isnt an empty string, then run `runDiscardDialog` and await the response
-    } else if (textEditorRef.current.innerText !== "") {
+    } else {
       runDiscardDialog().then(
         (response) => {
           switch(response) {
@@ -207,125 +205,55 @@ export default function App() {
     }
   }
 
-  const onTextEditorChange = () => {
-    calculateWordsAndCharacters(); 
-    setTextEdited(true);
-  }
-
-  const copySelection = () => {
-    var selectedText = window.getSelection().toString();
-    if (selectedText !== "") {
-      writeClipboard(selectedText);
-    }
-  }
-
-  const pasteBeforeSelection = () => {
-    readClipboard().then((text) => {
-      insert(text, "")
-    })
-  }
-
-  const cutSelection = () => {
-    var selectedText = window.getSelection().toString();
-    if (selectedText !== "") {
-      writeClipboard(selectedText).then(() => {
-        window.getSelection().deleteFromDocument();
-      })
-    }
-  }
-
-  const insert = (leftTag, rightTag=leftTag) => {
-    var selection = window.getSelection();
-    if (selection.rangeCount > 0) {
-      var range = selection.getRangeAt(0);
-      var startNode = range.startContainer, startOffset = range.startOffset;
-
-      var startTextNode = document.createTextNode(leftTag);
-      var endTextNode = document.createTextNode(rightTag);
-
-      var boundaryRange = range.cloneRange();
-      boundaryRange.collapse(false);
-      boundaryRange.insertNode(endTextNode);
-      boundaryRange.setStart(startNode, startOffset);
-      boundaryRange.collapse(true);
-      boundaryRange.insertNode(startTextNode);
-
-      range.setStartAfter(startTextNode);
-      range.setEndBefore(endTextNode);
-      selection.removeAllRanges();
-      selection.addRange(range);
-    }
-  }
-
   return (
     <>
-      <ContextMenu2
-        content={
-          <Menu>
-            <MenuItem icon="minus" text="Minimize" onClick={() => appWindow.minimize()}/>
-            <MenuItem icon="plus" text="Maximize" onClick={() => appWindow.toggleMaximize()}/>
-            <MenuItem icon="cross" text="Close" intent="danger" onClick={closeApplication}/>
-          </Menu>
-        }>
-
-        <div data-tauri-drag-region className="titlebar">
-          <div className="titlebar:left">
-            <ButtonGroup minimal small>
-              <Button small text="Open" className="titlebar:button" onClick={openFile}/>
-            </ButtonGroup>
-
-            <Divider/>
-
-            <ButtonGroup minimal small>
-              <Button small text="New" className="titlebar:button" onClick={newFile}/>
-            </ButtonGroup>
-
-            <Divider/>
-
-            <ButtonGroup minimal small>
-              <Button small text="Save" className="titlebar:button" onClick={saveFile}/>
-              <Button small text="Save as" className="titlebar:button" onClick={saveFileAs}/>
-            </ButtonGroup>
-          </div>
-
-          <div className="titlebar:right">
-            <ButtonGroup minimal small>
-              <Tooltip2 hoverOpenDelay={350} content="Show Menu">
-                <Button small icon="chevron-down" active={menuOpen} onClick={() => setMenuOpen(!menuOpen)}/>
-              </Tooltip2>
-
-              <Tooltip2 hoverOpenDelay={350} content="Settings">
-                <Button small icon="cog"/>
-              </Tooltip2>
-            </ButtonGroup>
-
-            <Divider/>
-
-            <ButtonGroup small minimal>
-              <Button small icon="minus" onClick={() => appWindow.minimize()}/>
-              <Button small icon="small-square" onClick={() => appWindow.toggleMaximize()}/>
-              <Button small icon="cross" onClick={closeApplication}/>
-            </ButtonGroup>
-          </div>
-        </div>
-      
-        {menuOpen ?
-        <div ref={toolbarRef} className="titlebar:toolbar" onWheel={(event) => toolbarRef.current.scrollLeft += event.deltaY * 3}>     
-          <span className="titlebar:text:semibold">Utilities: </span>
-    
+      <div data-tauri-drag-region className="titlebar" onContextMenu={noContextMenu}>
+        <div className="titlebar:left">
           <ButtonGroup minimal small>
-            <Button className="titlebar:text" small text="Cut" onClick={cutSelection}/>
-            <Button className="titlebar:text" small text="Copy" onClick={copySelection}/>
-            <Button className="titlebar:text" small text="Paste" onClick={pasteBeforeSelection}/>
-            <Button className="titlebar:text" small text="Find"/>
+            <Button small text="Open" className="titlebar:button" onClick={openFile}/>
           </ButtonGroup>
 
           <Divider/>
-          <span className="titlebar:text:semibold">Theme: </span>
 
           <ButtonGroup minimal small>
-            <Button className="titlebar:text" small text="Dark" onClick={() => document.querySelector("body").classList.add("bp4-dark")}/>
-            <Button className="titlebar:text" small text="Light" onClick={() => document.querySelector("body").classList.remove("bp4-dark")}/>
+            <Button small text="New" className="titlebar:button" onClick={newFile}/>
+          </ButtonGroup>
+
+          <Divider/>
+
+          <ButtonGroup minimal small>
+            <Button small text="Save" className="titlebar:button" onClick={saveFile}/>
+            <Button small text="Save as" className="titlebar:button" onClick={saveFileAs}/>
+          </ButtonGroup>
+        </div>
+
+        <div className="titlebar:right">
+          <ButtonGroup minimal small>
+            <Tooltip2 hoverOpenDelay={350} content="Show Menu">
+              <Button small icon="chevron-down" onClick={() => setMenuOpen(!menuOpen)}/>
+            </Tooltip2>
+
+            <Tooltip2 hoverOpenDelay={350} content="Settings">
+              <Button small icon="cog"/>
+            </Tooltip2>
+          </ButtonGroup>
+
+          <Divider/>
+
+          <ButtonGroup small minimal>
+            <Button small icon="minus" onClick={() => appWindow.minimize()}/>
+            <Button small icon="small-square" onClick={() => appWindow.toggleMaximize()}/>
+            <Button small icon="cross" onClick={closeApplication}/>
+          </ButtonGroup>
+        </div>
+      </div>
+    
+      {menuOpen ?
+        <div ref={toolbarRef} className="titlebar:toolbar" onWheel={(event) => toolbarRef.current.scrollLeft += event.deltaY * 3} onContextMenu={noContextMenu}>     
+          <span className="titlebar:text:semibold">Utilities: </span>
+    
+          <ButtonGroup minimal small>
+            <Button className="titlebar:text" small text="Find"/>
           </ButtonGroup>
 
           <Divider/>
@@ -334,7 +262,6 @@ export default function App() {
           <ButtonGroup minimal small>
             <Button className="titlebar:text" small text="Encrypt"/>
             <Button className="titlebar:text" small text="Decrypt"/>
-            <Button className="titlebar:text" small text="Configure"/>
           </ButtonGroup>
 
           <Divider/>
@@ -344,44 +271,26 @@ export default function App() {
             <Button className="titlebar:text" small text="Sha256"/>
             <Button className="titlebar:text" small text="Sha512"/>
           </ButtonGroup>
+
+          <Divider/>
+          <span className="titlebar:text:semibold">Theme: </span>
+
+          <ButtonGroup minimal small>
+            <Button className="titlebar:text" small text="Dark" onClick={() => document.querySelector("body").classList.add("bp4-dark")}/>
+            <Button className="titlebar:text" small text="Light" onClick={() => document.querySelector("body").classList.remove("bp4-dark")}/>
+          </ButtonGroup>
         </div>
-        :null}
+      :null}
 
-        <div className="titlebar:display">
-          <span className="titlebar:text titlebar:display:left" hidden={!textEdited}>~</span>
-          <span ref={fileNameRef} className="titlebar:text titlebar:display:left"></span>
-          <span ref={statisticsDisplayRef} className="titlebar:text titlebar:display:right">0 Words,  0 Characters</span>
-        </div>
-      </ContextMenu2>
+      <div className="titlebar:display" onContextMenu={noContextMenu}>
+        <span className="titlebar:text titlebar:display:left" hidden={!textEdited}>~</span>
+        <span ref={fileNameRef} className="titlebar:text titlebar:display:left"></span>
+        <span ref={statisticsDisplayRef} className="titlebar:text titlebar:display:right">0 Words,  0 Characters</span>
+      </div>
 
-
-      <ContextMenu2
-        className="content"
-        content={
-          <Menu>
-            <MenuItem text="Open" onClick={openFile}/>
-            <MenuItem text="New" onClick={newFile}/>
-            <MenuItem text="Save" onClick={saveFile}/>
-            <MenuItem text="Save as" onClick={saveFileAs}/>
-
-            <MenuDivider/>
-
-            <MenuItem icon="cut" text="Cut" onClick={cutSelection}/>
-            <MenuItem icon="duplicate" text="Copy" onClick={copySelection}/>
-            <MenuItem icon="clipboard" text="Paste" onClick={pasteBeforeSelection}/>
-
-            <MenuDivider/>
-
-            <MenuItem text="Window Controls">
-              <MenuItem icon="minus" text="Minimize" onClick={() => appWindow.minimize()}/>
-              <MenuItem icon="plus" text="Maximize" onClick={() => appWindow.toggleMaximize()}/>
-              <MenuItem icon="cross" text="Close" intent="danger" onClick={closeApplication}/>
-            </MenuItem>
-          </Menu>
-        }>
-
-        <div ref={textEditorRef} spellCheck={false} onInput={onTextEditorChange} className="texteditor texteditor:nowrap" contentEditable/>
-      </ContextMenu2>      
+      <div className="content">
+        <div ref={textEditorRef} spellCheck={false} onInput={() => {calculateWordsAndCharacters(); setTextEdited(true)}} className="texteditor texteditor:nowrap" contentEditable/>
+      </div>
     </>
   );
 }
