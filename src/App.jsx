@@ -183,7 +183,6 @@ export default function App() {
   }
 
   const closeApplication = () => {
-    console.log("x")
     // If text has not been edited, close application
     if (textEdited === false) {
       appWindow.close();
@@ -250,14 +249,6 @@ export default function App() {
     
       {menuOpen ?
         <div ref={toolbarRef} className="titlebar:toolbar" onWheel={(event) => toolbarRef.current.scrollLeft += event.deltaY * 3} onContextMenu={noContextMenu}>     
-          <span className="titlebar:text:semibold">Utilities: </span>
-    
-          <ButtonGroup minimal small>
-            <Button className="titlebar:text" small text="Find"/>
-            <Button className="titlebar:text" small text="Find and Replace"/>
-          </ButtonGroup>
-
-          <Divider/>
           <span className="titlebar:text:semibold">Security: </span>
 
           <ButtonGroup minimal small>
