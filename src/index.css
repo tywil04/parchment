@@ -124,8 +124,12 @@ html, body {
 }
 
 .titlebar\:toolbar > * {
-  margin-left: 0px;
+  margin-left: 7px;
   margin-right: 7px;
+}
+
+.titlebar\:toolbar > *:not(div.bp4-divider):not(span) {
+  display: contents;
 }
 
 .titlebar\:toolbar > span {

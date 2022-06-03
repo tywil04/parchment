@@ -254,22 +254,17 @@ export default function App() {
     
           <ButtonGroup minimal small>
             <Button className="titlebar:text" small text="Find"/>
+            <Button className="titlebar:text" small text="Find and Replace"/>
           </ButtonGroup>
 
           <Divider/>
-          <span className="titlebar:text:semibold">Encryption: </span>
+          <span className="titlebar:text:semibold">Security: </span>
 
           <ButtonGroup minimal small>
-            <Button className="titlebar:text" small text="Encrypt"/>
-            <Button className="titlebar:text" small text="Decrypt"/>
-          </ButtonGroup>
-
-          <Divider/>
-          <span className="titlebar:text:semibold">Hashes: </span>
-
-          <ButtonGroup minimal small>
-            <Button className="titlebar:text" small text="Sha256"/>
-            <Button className="titlebar:text" small text="Sha512"/>
+            <Button className="titlebar:text" small text="Encrypt file"/>
+            <Button className="titlebar:text" small text="Decrypt file"/>
+            <Button className="titlebar:text" small text="Calculate SHA256"/>
+            <Button className="titlebar:text" small text="Calculate SHA512"/>
           </ButtonGroup>
 
           <Divider/>
