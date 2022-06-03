@@ -259,6 +259,13 @@ export default function App() {
           </ButtonGroup>
 
           <Divider/>
+          <span className="titlebar:text:semibold">Templates: </span>
+
+          <ButtonGroup minimal small>
+            <Button className="titlebar:text" small text="Create Template"/>
+          </ButtonGroup>
+
+          <Divider/>
           <span className="titlebar:text:semibold">Theme: </span>
 
           <ButtonGroup minimal small>
