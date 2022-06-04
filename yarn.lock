@@ -3557,6 +3557,20 @@ delayed-stream@~1.0.0:
   resolved "https://registry.yarnpkg.com/delayed-stream/-/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
   integrity sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==
 
+dendriform-immer-patch-optimiser@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/dendriform-immer-patch-optimiser/-/dendriform-immer-patch-optimiser-2.1.2.tgz#baf836c698bbcbfa89aa158c02b33fd289411c6a"
+  integrity sha512-IGoxH1AsYMjwGnuRqCrCzJwWESdgRh9334hDxayRWj1Loa2QhyTiu5PcQ6i+b5YRHnkrFMrCIX5zpvnQTxBFuQ==
+
+dendriform@^3.4.2:
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/dendriform/-/dendriform-3.4.2.tgz#acc66b7cb18c11b8fe0111cdb3ca7d165d914020"
+  integrity sha512-xNHrpptB2230AjGAEPHhaDDku9tCsqdU1MG2SAAakTIN6Cl1qRb+iQ+kSDOzmeBc0IEhifTJqUMyYRJjM5Z2xg==
+  dependencies:
+    dendriform-immer-patch-optimiser "^2.1.2"
+    immer "9.0.1"
+    shallow-equal "1.2.1"
+
 depd@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/depd/-/depd-2.0.0.tgz#b696163cc757560d09cf22cc8fad1571b79e76df"
@@ -4870,6 +4884,11 @@ ignore@^5.2.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.2.0.tgz#6d3bac8fa7fe0d45d9f9be7bac2fc279577e345a"
   integrity sha512-CmxgYGiEPCLhfLnpPp1MoRmifwEIOgjcHXxOBjv7mY96c+eWScsOP9c112ZyLdWHi0FxHjI+4uVhKYp/gcdRmQ==
+
+immer@9.0.1:
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.1.tgz#1116368e051f9a0fd188c5136b6efb74ed69c57f"
+  integrity sha512-7CCw1DSgr8kKYXTYOI1qMM/f5qxT5vIVMeGLDCDX8CSxsggr1Sjdoha4OhsP0AZ1UvWbyZlILHvLjaynuu02Mg==
 
 immer@^9.0.7:
   version "9.0.14"
@@ -7790,6 +7809,11 @@ setprototypeof@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.2.0.tgz#66c9a24a73f9fc28cbe66b09fed3d33dcaf1b424"
   integrity sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==
+
+shallow-equal@1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/shallow-equal/-/shallow-equal-1.2.1.tgz#4c16abfa56043aa20d050324efa68940b0da79da"
+  integrity sha512-S4vJDjHHMBaiZuT9NPb616CSmLf618jawtv3sufLl6ivK8WocjAo58cXwbRV1cgqxH0Qbv+iUt6m05eqEa2IRA==
 
 shebang-command@^2.0.0:
   version "2.0.0"

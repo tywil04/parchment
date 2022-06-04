@@ -6,6 +6,7 @@
     "@blueprintjs/core": "^4.4.0",
     "@blueprintjs/popover2": "^1.3.0",
     "@tauri-apps/api": "^1.0.0-rc.6",
+    "dendriform": "^3.4.2",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-scripts": "5.0.1"
