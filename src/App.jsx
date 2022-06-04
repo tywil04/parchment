@@ -4,12 +4,9 @@ import ReactDOM from 'react-dom/client';
 import { appWindow } from '@tauri-apps/api/window'
 import { save as saveDialog, open as openDialog } from "@tauri-apps/api/dialog"
 import { readTextFile, writeFile } from "@tauri-apps/api/fs";
-import { readText as readClipboard, writeText as writeClipboard } from "@tauri-apps/api/clipboard";
 
-import { Menu, MenuItem, MenuDivider, Divider, Dialog, Button, ButtonGroup, Classes } from "@blueprintjs/core";
-import { Tooltip2, ContextMenu2 } from "@blueprintjs/popover2";
-
-import { useDendriform } from "dendriform";
+import { Divider, Dialog, Button, ButtonGroup, Classes } from "@blueprintjs/core";
+import { Tooltip2 } from "@blueprintjs/popover2";
 
 // To do:
 // Settings:
@@ -32,33 +29,11 @@ export default function App() {
   const fileNameRef = React.useRef();
   const statisticsDisplayRef = React.useRef();
   const textEditorRef = React.useRef();
-  const textEditorContent = useDendriform("", {history: 50});
-
-  // Intercept default CTRL-Z and CTRL-Y (Undo/Redo)
-  textEditorRef.current.onkeydown = (event) => { 
-    if (event.key === "z" && event.ctrlKey) {
-      disableDefaultEvent();
-      undo();
-    } else if (event.key === "y" && event.ctrlKey) {
-      disableDefaultEvent();
-      redo();
-    }
-  }
 
   const disableDefaultEvent = (event) => {
     event.preventDefault(); 
     event.stopPropagation();
   };
-
-  const undo = () => {
-    textEditorContent.undo(); 
-    textEditorRef.current.value = textEditorContent.value;
-  }
-
-  const redo = () => {
-    textEditorContent.redo(); 
-    textEditorRef.current.value = textEditorContent.value;
-  }
 
   const calculateWordsAndCharacters = () => {
     var words = textEditorRef.current.value.trim().replace("\n", " ").split(/(\s+)/).filter((word) => word.trim().length > 0).length;
@@ -228,30 +203,6 @@ export default function App() {
     }
   }
 
-  const cutSelection = () => {
-    var selectedText = window.getSelection().toString();
-    if (selectedText !== "") {
-      writeClipboard(selectedText).then(() => {
-        textEditorRef.current.setRangeText("", textEditorRef.current.selectionStart, textEditorRef.current.selectionEnd, 'select')
-        textEditorContent.set(textEditorRef.current.value);
-      })
-    }
-  }
-
-  const copySelection = () => {
-    var selectedText = window.getSelection().toString();
-    if (selectedText !== "") {
-      writeClipboard(selectedText);
-    }
-  }
-
-  const pasteSelection = () => {
-    readClipboard().then((text) => {
-      textEditorRef.current.setRangeText(text, textEditorRef.current.selectionStart, textEditorRef.current.selectionEnd, 'select')
-      textEditorContent.set(textEditorRef.current.value);
-    })
-  }
-
   return (
     <>
       <div data-tauri-drag-region className="titlebar" onContextMenu={disableDefaultEvent}>
@@ -297,17 +248,6 @@ export default function App() {
     
       {menuOpen ?
         <div ref={toolbarRef} className="titlebar:toolbar" onWheel={(event) => toolbarRef.current.scrollLeft += event.deltaY * 3} onContextMenu={disableDefaultEvent}>     
-          <span className="titlebar:text:semibold">Utilities: </span>
-
-          <ButtonGroup minimal small>
-            <Button className="titlebar:text" small text="Cut" onClick={cutSelection}/>
-            <Button className="titlebar:text" small text="Copy" onClick={copySelection}/>
-            <Button className="titlebar:text" small text="Paste" onClick={pasteSelection}/>
-            <Button className="titlebar:text" small text="Undo" onClick={undo}/>
-            <Button className="titlebar:text" small text="Redo" onClick={redo}/>
-          </ButtonGroup>
-
-          <Divider/>
           <span className="titlebar:text:semibold">Security: </span>
 
           <ButtonGroup minimal small>
@@ -340,38 +280,9 @@ export default function App() {
         <span ref={statisticsDisplayRef} className="titlebar:text titlebar:display:right">0 Words,  0 Characters</span>
       </div>
 
-      <ContextMenu2
-        content={
-          <Menu>
-            <MenuItem text="Cut" labelElement="Ctrl+X" onClick={cutSelection}/>
-            <MenuItem text="Copy" labelElement="Ctrl+C" onClick={copySelection}/>
-            <MenuItem text="Paste" labelElement="Ctrl+V" onClick={pasteSelection}/>
-
-            <MenuDivider/>
-
-            <MenuItem text="Undo" labelElement="Ctrl+Z" onClick={undo}/>
-            <MenuItem text="Redo" labelElement="Ctrl+Y" onClick={redo}/>
-
-            <MenuDivider/>
-
-            <MenuItem text="Open" labelElement="Ctrl+O" onClick={openFile}/>
-            <MenuItem text="New" labelElement="Ctrl+N" onClick={newFile}/>
-            <MenuItem text="Save" labelElement="Ctrl+S" onClick={saveFile}/>
-            <MenuItem text="Save as" labelElement="Ctrl+Shift+S" onClick={saveFileAs}/>
-
-            <MenuDivider/>
-
-            <MenuItem text="Window Controls">
-              <MenuItem icon="minus" text="Minimize" onClick={appWindow.minimize}/>
-              <MenuItem icon="small-square" text="Maximize" onClick={appWindow.toggleMaximize}/>
-              <MenuItem icon="cross" intent="danger" text="Close" onClick={closeApplication}/>
-            </MenuItem>
-          </Menu>
-        }
-        className="content"
-      >
-        <textarea ref={textEditorRef} spellCheck={false} onChange={(event) => {calculateWordsAndCharacters(); setTextEdited(true); textEditorContent.set(event.target.value)}} className="texteditor texteditor:nowrap"/>
-      </ContextMenu2>
+      <div className="content">
+        <textarea ref={textEditorRef} spellCheck={false} onChange={(event) => {calculateWordsAndCharacters(); setTextEdited(true)}} className="texteditor texteditor:nowrap"/>
+      </div>
     </>
   );
 }
