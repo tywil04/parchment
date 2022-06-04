@@ -32,10 +32,10 @@ export default function App() {
   const fileNameRef = React.useRef();
   const statisticsDisplayRef = React.useRef();
   const textEditorRef = React.useRef();
-  const textEditorContent = useDendriform(() => "", {history: 50});
+  const textEditorContent = useDendriform("", {history: 50});
 
   // Intercept default CTRL-Z and CTRL-Y (Undo/Redo)
-  window.onkeydown = (event) => { 
+  textEditorRef.current.onkeydown = (event) => { 
     if (event.key === "z" && event.ctrlKey) {
       disableDefaultEvent();
       undo();
@@ -88,7 +88,7 @@ export default function App() {
         const InternalDialog = (props) => {
           const [open, setOpen] = React.useState(true);
           return (
-            <Dialog usePortal={false} title="Discard Contents" isOpen={open} onClose={() => setOpen(false)} onClosed={() => document.getElementById(random).remove()}>
+            <Dialog usePortal={false} isOpen={open} onClose={() => setOpen(false)} onClosed={() => document.getElementById(random).remove()}>
               <div className={Classes.DIALOG_BODY}>
                 <p>
                   What would you like to do with this file? You can discard it, save it or continue editing it.
@@ -232,7 +232,7 @@ export default function App() {
     var selectedText = window.getSelection().toString();
     if (selectedText !== "") {
       writeClipboard(selectedText).then(() => {
-        window.getSelection().deleteFromDocument();
+        textEditorRef.current.setRangeText("", textEditorRef.current.selectionStart, textEditorRef.current.selectionEnd, 'select')
         textEditorContent.set(textEditorRef.current.value);
       })
     }
@@ -300,6 +300,9 @@ export default function App() {
           <span className="titlebar:text:semibold">Utilities: </span>
 
           <ButtonGroup minimal small>
+            <Button className="titlebar:text" small text="Cut" onClick={cutSelection}/>
+            <Button className="titlebar:text" small text="Copy" onClick={copySelection}/>
+            <Button className="titlebar:text" small text="Paste" onClick={pasteSelection}/>
             <Button className="titlebar:text" small text="Undo" onClick={undo}/>
             <Button className="titlebar:text" small text="Redo" onClick={redo}/>
           </ButtonGroup>
@@ -367,7 +370,7 @@ export default function App() {
         }
         className="content"
       >
-        <textarea ref={textEditorRef} spellCheck={false} onInput={() => {calculateWordsAndCharacters(); setTextEdited(true); textEditorContent.set(textEditorRef.current.value)}} className="texteditor texteditor:nowrap"/>
+        <textarea ref={textEditorRef} spellCheck={false} onChange={(event) => {calculateWordsAndCharacters(); setTextEdited(true); textEditorContent.set(event.target.value)}} className="texteditor texteditor:nowrap"/>
       </ContextMenu2>
     </>
   );
