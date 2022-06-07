@@ -20,6 +20,8 @@ import { Tooltip2 } from "@blueprintjs/popover2";
 //
 // Encrypting Contents Functionality 
 // 
+// Change Tauri Model, Lock down tauri / fix security things
+// 
 // Etc
 
 var platformName = "";
