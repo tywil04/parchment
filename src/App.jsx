@@ -22,18 +22,27 @@ import { Tooltip2 } from "@blueprintjs/popover2";
 // 
 // Etc
 
-var defaultDarkTheme = window.matchMedia('(prefers-color-scheme: dark)');
 var platformName = "";
 type().then(data => platformName = data)
 
-if (defaultDarkTheme) {
+var defaultDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+if (defaultDarkTheme === true) {
   document.querySelector("body").classList.add("bp4-dark");
 }
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener("change", event => {
+  if (event.matches) {
+    document.querySelector("body").classList.add("bp4-dark");
+  } else {
+    document.querySelector("body").classList.remove("bp4-dark");
+  }
+})
 
 export default function App() {
   const [currentFilePath, setCurrentFilePath] = React.useState("");
   const [textEdited, setTextEdited] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(true);
+  const [textWrap, setTextWrap] = React.useState(false);
   const toolbarRef = React.useRef();
   const fileNameRef = React.useRef();
   const statisticsDisplayRef = React.useRef();
@@ -341,7 +350,7 @@ export default function App() {
           <span className="titlebar:text:semibold">Utilities: </span>
 
           <ButtonGroup minimal small>
-            <Button className="titlebar:text" small text="Toggle Text Wrapping" onClick={() => textEditorRef.current.classList.toggle("texteditor:nowrap")}/>
+            <Button className="titlebar:text" small text="Toggle Text Wrapping" onClick={() => setTextWrap(!textWrap)}/>
           </ButtonGroup>
 
           <Divider/>
@@ -378,7 +387,7 @@ export default function App() {
       </div>
 
       <div className="content">
-        <textarea ref={textEditorRef} spellCheck={false} onChange={(event) => {calculateWordsAndCharacters(); setTextEdited(true)}} className="texteditor"/>
+        <textarea wrap={textWrap ? "on": "off"} ref={textEditorRef} spellCheck={false} onChange={(event) => {calculateWordsAndCharacters(); setTextEdited(true)}} className="texteditor"/>
       </div>
     </>
   );
