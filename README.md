@@ -9,6 +9,7 @@ This project uses the following:
 - BlueprintJS a fantastic component library for React
 - Tauri a Rust wrapper to create desktop applications using JS/HTML/CSS
 
+The toolbar is a scrollable bar that contains settings etc. Nothing actually works on the bar currently.
 
 #### Windows 11 Dark Mode 
 ![Windows 11 Dark Mode](/screenshots/win11-dark.png)
