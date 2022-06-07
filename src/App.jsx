@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom/client';
 import { appWindow } from '@tauri-apps/api/window'
 import { save as saveDialog, open as openDialog } from "@tauri-apps/api/dialog"
 import { readTextFile, writeFile } from "@tauri-apps/api/fs";
+import { type } from "@tauri-apps/api/os";
 
 import { Divider, Dialog, Button, ButtonGroup, Classes } from "@blueprintjs/core";
 import { Tooltip2 } from "@blueprintjs/popover2";
@@ -21,6 +22,9 @@ import { Tooltip2 } from "@blueprintjs/popover2";
 // 
 // Etc
 
+var platformName = "";
+type().then(data => platformName = data)
+
 export default function App() {
   const [currentFilePath, setCurrentFilePath] = React.useState("");
   const [textEdited, setTextEdited] = React.useState(false);
@@ -29,6 +33,7 @@ export default function App() {
   const fileNameRef = React.useRef();
   const statisticsDisplayRef = React.useRef();
   const textEditorRef = React.useRef();
+
 
   const disableDefaultEvent = (event) => {
     event.preventDefault(); 
@@ -203,47 +208,94 @@ export default function App() {
     }
   }
 
+  console.log(platformName)
+
   return (
     <>
       <div data-tauri-drag-region className="titlebar" onContextMenu={disableDefaultEvent}>
-        <div className="titlebar:left">
-          <ButtonGroup minimal small>
-            <Button small text="Open" className="titlebar:button" onClick={openFile}/>
-          </ButtonGroup>
+        {platformName === "Darwin"?
+          <>
+            <div className="titlebar:left">
+              <ButtonGroup small minimal>
+                <Button small icon="cross" onClick={closeApplication}/>
+                <Button small icon="small-square" onClick={() => appWindow.toggleMaximize()}/>
+                <Button small icon="minus" onClick={() => appWindow.minimize()}/> 
+              </ButtonGroup>
 
-          <Divider/>
+              <Divider/>
 
-          <ButtonGroup minimal small>
-            <Button small text="New" className="titlebar:button" onClick={newFile}/>
-          </ButtonGroup>
+              <ButtonGroup minimal small>
+                <Button small text="Open" className="titlebar:button" onClick={openFile}/>
+              </ButtonGroup>
 
-          <Divider/>
+              <Divider/>
 
-          <ButtonGroup minimal small>
-            <Button small text="Save" className="titlebar:button" onClick={saveFile}/>
-            <Button small text="Save as" className="titlebar:button" onClick={saveFileAs}/>
-          </ButtonGroup>
-        </div>
+              <ButtonGroup minimal small>
+                <Button small text="New" className="titlebar:button" onClick={newFile}/>
+              </ButtonGroup>
 
-        <div className="titlebar:right">
-          <ButtonGroup minimal small>
-            <Tooltip2 hoverOpenDelay={350} content="Show Menu">
-              <Button small icon="chevron-down" onClick={() => setMenuOpen(!menuOpen)}/>
-            </Tooltip2>
+              <Divider/>
 
-            <Tooltip2 hoverOpenDelay={350} content="Settings">
-              <Button small icon="cog"/>
-            </Tooltip2>
-          </ButtonGroup>
+              <ButtonGroup minimal small>
+                <Button small text="Save" className="titlebar:button" onClick={saveFile}/>
+                <Button small text="Save as" className="titlebar:button" onClick={saveFileAs}/>
+              </ButtonGroup>
+            </div>
 
-          <Divider/>
+            <div className="titlebar:right">
+              <ButtonGroup minimal small>
+                <Tooltip2 hoverOpenDelay={350} content="Show Menu">
+                  <Button small icon="chevron-down" onClick={() => setMenuOpen(!menuOpen)}/>
+                </Tooltip2>
 
-          <ButtonGroup small minimal>
-            <Button small icon="minus" onClick={() => appWindow.minimize()}/>
-            <Button small icon="small-square" onClick={() => appWindow.toggleMaximize()}/>
-            <Button small icon="cross" onClick={closeApplication}/>
-          </ButtonGroup>
-        </div>
+                <Tooltip2 hoverOpenDelay={350} content="Settings">
+                  <Button small icon="cog"/>
+                </Tooltip2>
+              </ButtonGroup>
+            </div>
+          </>
+        :
+          <>
+            <div className="titlebar:left">
+              <ButtonGroup minimal small>
+                <Button small text="Open" className="titlebar:button" onClick={openFile}/>
+              </ButtonGroup>
+
+              <Divider/>
+
+              <ButtonGroup minimal small>
+                <Button small text="New" className="titlebar:button" onClick={newFile}/>
+              </ButtonGroup>
+
+              <Divider/>
+
+              <ButtonGroup minimal small>
+                <Button small text="Save" className="titlebar:button" onClick={saveFile}/>
+                <Button small text="Save as" className="titlebar:button" onClick={saveFileAs}/>
+              </ButtonGroup>
+            </div>
+
+            <div className="titlebar:right">
+              <ButtonGroup minimal small>
+                <Tooltip2 hoverOpenDelay={350} content="Show Menu">
+                  <Button small icon="chevron-down" onClick={() => setMenuOpen(!menuOpen)}/>
+                </Tooltip2>
+
+                <Tooltip2 hoverOpenDelay={350} content="Settings">
+                  <Button small icon="cog"/>
+                </Tooltip2>
+              </ButtonGroup>
+
+              <Divider/>
+
+              <ButtonGroup small minimal>
+                <Button small icon="minus" onClick={() => appWindow.minimize()}/>
+                <Button small icon="small-square" onClick={() => appWindow.toggleMaximize()}/>
+                <Button small icon="cross" onClick={closeApplication}/>
+              </ButtonGroup>
+            </div>
+          </>
+        }
       </div>
     
       {menuOpen ?
