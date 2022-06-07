@@ -248,6 +248,13 @@ export default function App() {
     
       {menuOpen ?
         <div ref={toolbarRef} className="titlebar:toolbar" onWheel={(event) => toolbarRef.current.scrollLeft += event.deltaY * 3} onContextMenu={disableDefaultEvent}>     
+          <span className="titlebar:text:semibold">Utilities: </span>
+
+          <ButtonGroup minimal small>
+            <Button className="titlebar:text" small text="Toggle Text Wrapping" onClick={() => textEditorRef.current.classList.toggle("texteditor:nowrap")}/>
+          </ButtonGroup>
+
+          <Divider/>
           <span className="titlebar:text:semibold">Security: </span>
 
           <ButtonGroup minimal small>
@@ -281,7 +288,7 @@ export default function App() {
       </div>
 
       <div className="content">
-        <textarea ref={textEditorRef} spellCheck={false} onChange={(event) => {calculateWordsAndCharacters(); setTextEdited(true)}} className="texteditor texteditor:nowrap"/>
+        <textarea ref={textEditorRef} spellCheck={false} onChange={(event) => {calculateWordsAndCharacters(); setTextEdited(true)}} className="texteditor"/>
       </div>
     </>
   );

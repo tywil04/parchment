@@ -12,7 +12,11 @@ This project uses the following:
 The toolbar is a scrollable bar that contains settings etc. Nothing actually works on the bar currently.
 
 #### Windows 11 Dark Mode 
+![Windows 11 Dark Mode (With Text Wrapping)](/screenshots/win11-dark-wrapped.png)
+
 ![Windows 11 Dark Mode](/screenshots/win11-dark.png)
 
 #### Windows 11 Light Mode
+![Windows 11 Light Mode (With Text Wrapping)](/screenshots/win11-light-wrapped.png)
+
 ![Windows 11 Light Mode](/screenshots/win11-light.png)
