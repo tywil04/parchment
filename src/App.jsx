@@ -22,8 +22,13 @@ import { Tooltip2 } from "@blueprintjs/popover2";
 // 
 // Etc
 
+var defaultDarkTheme = window.matchMedia('(prefers-color-scheme: dark)');
 var platformName = "";
 type().then(data => platformName = data)
+
+if (defaultDarkTheme) {
+  document.querySelector("body").classList.add("bp4-dark");
+}
 
 export default function App() {
   const [currentFilePath, setCurrentFilePath] = React.useState("");
@@ -57,7 +62,7 @@ export default function App() {
   const runDiscardDialog = () => {
     return new Promise((success, failure) => {
       try {
-        const random = "discard-dialog-" + generateRandomString();
+        const random = "dialog-" + generateRandomString();
 
         // Create a div with a random id that will be used to hold the dialog
         var div = document.createElement("div")
@@ -87,12 +92,45 @@ export default function App() {
 
         // Render the dialog in the div that was created
         ReactDOM.createRoot(document.getElementById(random)).render(
-          <InternalDialog success={success} failure={failure}/>
+          <InternalDialog success={success}/>
         );
       } catch {
         failure();
       }
     })
+  }
+
+  const runNotImplementedDialog = () => {
+    const random = "dialog-" + generateRandomString();
+
+    // Create a div with a random id that will be used to hold the dialog
+    var div = document.createElement("div")
+    div.id = random;
+    document.querySelector("body").appendChild(div);
+
+    // Dialog component
+    const InternalDialog = () => {
+      const [open, setOpen] = React.useState(true);
+      return (
+        <Dialog usePortal={false} isOpen={open} onClose={() => setOpen(false)} onClosed={() => document.getElementById(random).remove()}>
+          <div className={Classes.DIALOG_BODY}>
+            <p>
+              This application is still in development and this feature is not implemented yet. This button is a placeholder, sorry.
+            </p>
+          </div>
+          <div className={Classes.DIALOG_FOOTER}>
+            <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+              <Button small text="Okay" onClick={() => {setOpen(false)}}/>
+            </div>
+          </div>
+        </Dialog>
+      )
+    }
+
+    // Render the dialog in the div that was created
+    ReactDOM.createRoot(document.getElementById(random)).render(
+      <InternalDialog/>
+    );
   }
 
   const saveFileAs = () => {
@@ -244,11 +282,11 @@ export default function App() {
 
             <div className="titlebar:right">
               <ButtonGroup minimal small>
-                <Tooltip2 hoverOpenDelay={350} content="Show Menu">
+                <Tooltip2 hoverOpenDelay={350} content="Toggle Menu">
                   <Button small icon="chevron-down" onClick={() => setMenuOpen(!menuOpen)}/>
                 </Tooltip2>
 
-                <Tooltip2 hoverOpenDelay={350} content="Settings">
+                <Tooltip2 hoverOpenDelay={350} content="Settings" onClick={runNotImplementedDialog}>
                   <Button small icon="cog"/>
                 </Tooltip2>
               </ButtonGroup>
@@ -281,7 +319,7 @@ export default function App() {
                   <Button small icon="chevron-down" onClick={() => setMenuOpen(!menuOpen)}/>
                 </Tooltip2>
 
-                <Tooltip2 hoverOpenDelay={350} content="Settings">
+                <Tooltip2 hoverOpenDelay={350} content="Settings" onClick={runNotImplementedDialog}>
                   <Button small icon="cog"/>
                 </Tooltip2>
               </ButtonGroup>
@@ -310,17 +348,17 @@ export default function App() {
           <span className="titlebar:text:semibold">Security: </span>
 
           <ButtonGroup minimal small>
-            <Button className="titlebar:text" small text="Encrypt file"/>
-            <Button className="titlebar:text" small text="Decrypt file"/>
-            <Button className="titlebar:text" small text="Calculate SHA256"/>
-            <Button className="titlebar:text" small text="Calculate SHA512"/>
+            <Button className="titlebar:text" small text="Encrypt file" onClick={runNotImplementedDialog}/>
+            <Button className="titlebar:text" small text="Decrypt file" onClick={runNotImplementedDialog}/>
+            <Button className="titlebar:text" small text="Calculate SHA256" onClick={runNotImplementedDialog}/>
+            <Button className="titlebar:text" small text="Calculate SHA512" onClick={runNotImplementedDialog}/>
           </ButtonGroup>
 
           <Divider/>
           <span className="titlebar:text:semibold">Templates: </span>
 
           <ButtonGroup minimal small>
-            <Button className="titlebar:text" small text="Create Template"/>
+            <Button className="titlebar:text" small text="Create Template" onClick={runNotImplementedDialog}/>
           </ButtonGroup>
 
           <Divider/>
