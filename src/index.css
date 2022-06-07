@@ -182,11 +182,6 @@ html, body {
   color: var(--regular-text);
 }
 
-.texteditor\:nowrap {
-  white-space: pre;
-  overflow-wrap: normal;
-}
-
 ::-webkit-scrollbar {
   width: 14px;
   height: 14px;
