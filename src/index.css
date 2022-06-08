@@ -113,7 +113,6 @@ html, body {
   display: flex;
   flex-direction: row;
   flex-grow: 1;
-  height: 35px;
   max-height: 35px;
   background: var(--titlebar-colour);
   position: relative;
@@ -121,6 +120,17 @@ html, body {
   border-bottom: 1px solid var(--border-colour);
   scroll-behavior: smooth;
   user-select: none;
+  z-index: 1;
+}
+
+.titlebar\:toolbar::-webkit-scrollbar {
+  height: 20px;
+  width: 20px;
+}
+
+.titlebar\:toolbar:hover {
+  overflow-x: auto;
+  max-height: 55px;
 }
 
 .titlebar\:toolbar > * {
@@ -145,11 +155,19 @@ html, body {
   background: var(--titlebar-lower-colour);
   width: 100%;
   position: relative;
-  height: 24px;
+  height: 20px;
   border-bottom: 1px solid var(--border-colour);
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 7px;
+  padding-right: 7px;
   user-select: none;
+}
+
+.titlebar\:display > .titlebar\:text {
+  line-height: 20px;
+}
+
+.titlebar\:toolbar:hover ~ .titlebar\:display {
+  margin-top: -20px;
 }
 
 .titlebar\:display\:right {
@@ -180,11 +198,13 @@ html, body {
   padding: 10px;
   line-height: 2.5ch;
   color: var(--regular-text);
+  cursor: auto;
 }
 
 ::-webkit-scrollbar {
   width: 14px;
   height: 14px;
+  position: absolute;
 }
 
 ::-webkit-scrollbar-thumb {
