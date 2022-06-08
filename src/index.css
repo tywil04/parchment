@@ -129,7 +129,7 @@ html, body {
 }
 
 .titlebar\:toolbar:hover {
-  overflow-x: auto;
+  overflow-x: scroll;
   max-height: 55px;
 }
 
