@@ -297,8 +297,8 @@ export default function App() {
                   <Button small icon="chevron-down" onClick={() => setMenuOpen(!menuOpen)}/>
                 </Tooltip2>
 
-                <Tooltip2 hoverOpenDelay={350} content="Settings" onClick={runNotImplementedDialog}>
-                  <Button small icon="cog"/>
+                <Tooltip2 hoverOpenDelay={350} content="Settings">
+                  <Button small icon="cog" onClick={runNotImplementedDialog}/>
                 </Tooltip2>
               </ButtonGroup>
             </div>
@@ -330,8 +330,8 @@ export default function App() {
                   <Button small icon="chevron-down" onClick={() => setMenuOpen(!menuOpen)}/>
                 </Tooltip2>
 
-                <Tooltip2 hoverOpenDelay={350} content="Settings" onClick={runNotImplementedDialog}>
-                  <Button small icon="cog"/>
+                <Tooltip2 hoverOpenDelay={350} content="Settings">
+                  <Button small icon="cog" onClick={runNotImplementedDialog}/>
                 </Tooltip2>
               </ButtonGroup>
 
