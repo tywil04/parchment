@@ -40,6 +40,8 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener("change", eve
   }
 })
 
+
+
 export default function App() {
   const [currentFilePath, setCurrentFilePath] = React.useState("");
   const [textEdited, setTextEdited] = React.useState(false);
@@ -50,6 +52,18 @@ export default function App() {
   const statisticsDisplayRef = React.useRef();
   const textEditorRef = React.useRef();
 
+  const onResize = ({ event, payload }) => {
+    if (payload.width < toolbarRef.current.scrollWidth) {
+      toolbarRef.current.classList.add("titlebar:toolbar:scroll")
+    } else {
+      toolbarRef.current.classList.remove("titlebar:toolbar:scroll")
+    }
+  }
+  appWindow.listen('tauri://resize', onResize)
+
+  React.useEffect(() => {
+    onResize({event: "", payload: {width: "580"}})
+  })
 
   const disableDefaultEvent = (event) => {
     event.preventDefault(); 

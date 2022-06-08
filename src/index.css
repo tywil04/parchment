@@ -128,7 +128,7 @@ html, body {
   width: 20px;
 }
 
-.titlebar\:toolbar:hover {
+.titlebar\:toolbar\:scroll.titlebar\:toolbar:hover {
   overflow-x: scroll;
   max-height: 55px;
 }
@@ -166,7 +166,7 @@ html, body {
   line-height: 20px;
 }
 
-.titlebar\:toolbar:hover ~ .titlebar\:display {
+.titlebar\:toolbar\:scroll.titlebar\:toolbar:hover ~ .titlebar\:display {
   margin-top: -20px;
 }
 
