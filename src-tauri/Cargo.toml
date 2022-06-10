@@ -1,11 +1,11 @@
 [package]
-name = "app"
+name = "tauri-notepad"
 version = "0.1.0"
-description = "A Tauri App"
+description = "A Lightweight Notepad Application"
 authors = ["you"]
 license = ""
 repository = ""
-default-run = "app"
+default-run = "tauri-notepad"
 edition = "2021"
 rust-version = "1.57"
 
@@ -30,3 +30,7 @@ custom-protocol = [ "tauri/custom-protocol" ]
 
 [profile.release]
 strip = true
+panic = "abort" # Strip expensive panic clean-up logic
+codegen-units = 1 # Compile crates one after another so the compiler can optimize better
+lto = true # Enables link to optimizations
+opt-level = "s" # Optimize for binary size

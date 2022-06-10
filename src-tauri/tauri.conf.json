@@ -19,7 +19,7 @@
     },
     "bundle": {
       "active": true,
-      "category": "Notepad",
+      "category": "Utility",
       "copyright": "",
       "deb": {
         "depends": []
@@ -65,6 +65,6 @@
         "width": 580,
         "decorations": false
       }
-    ],
+    ]
   }
 }
