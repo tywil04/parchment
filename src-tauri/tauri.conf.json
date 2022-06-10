@@ -7,16 +7,19 @@
     "distDir": "../build"
   },
   "package": {
-    "productName": "tauri-notepad",
+    "productName": "Notepad",
     "version": "0.1.0"
   },
   "tauri": {
     "allowlist": {
-      "all": true
+      "fs": { "writeFile": true, "readFile": true },
+      "os": { "all": true },
+      "dialog": { "open": true, "save": true },
+      "window": { "maximize": true, "unmaximize": true, "minimize": true, "unminimize": true, "close": true, "startDragging": true }
     },
     "bundle": {
       "active": true,
-      "category": "DeveloperTool",
+      "category": "Notepad",
       "copyright": "",
       "deb": {
         "depends": []
@@ -48,7 +51,7 @@
       }
     },
     "security": {
-      "csp": null
+      "csp": "default-src blob: data: filesystem: ws: wss: http: https: tauri: 'self' img-src: 'self'"
     },
     "updater": {
       "active": false
@@ -58,10 +61,10 @@
         "fullscreen": false,
         "height": 760,
         "resizable": true,
-        "title": "Tauri Notepad",
+        "title": "Notepad",
         "width": 580,
         "decorations": false
       }
-    ]
+    ],
   }
 }
