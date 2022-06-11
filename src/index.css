@@ -124,6 +124,7 @@ html, body {
   font-weight: 500;
   color: var(--subtle-text) !important;
   white-space: nowrap;
+  height: fit-content;
 }
 
 .titlebar\:icon {
@@ -135,8 +136,6 @@ html, body {
   padding: 5px;
   display: flex;
   flex-direction: row;
-  flex-grow: 1;
-  max-height: 35px;
   background: var(--titlebar-colour);
   position: relative;
   overflow-x: hidden;
@@ -151,9 +150,8 @@ html, body {
   width: 20px;
 }
 
-.titlebar\:toolbar\:scroll.titlebar\:toolbar:hover {
-  overflow-x: scroll;
-  max-height: 55px;
+.titlebar\:toolbar:hover {
+  overflow-x: auto;
 }
 
 .titlebar\:toolbar > * {
@@ -163,6 +161,11 @@ html, body {
 
 .titlebar\:toolbar > *:not(div.bp4-divider):not(span) {
   display: contents;
+}
+
+.titlebar\:toolbar\:button {
+  height: 24px !important;
+  max-height: 24px !important;
 }
 
 .titlebar\:toolbar > span {
@@ -192,10 +195,6 @@ html, body {
   line-height: 20px;
 }
 
-.titlebar\:toolbar\:scroll.titlebar\:toolbar:hover ~ .titlebar\:display {
-  margin-top: -20px;
-}
-
 .titlebar\:display\:right {
   margin-left: auto;
   display: flex;
@@ -223,7 +222,7 @@ html, body {
 
 .texteditor {
   border-style: none;
-  border-color: Transparent;
+  border-color: transparent;
   overflow: auto;
   outline: none;
   background: transparent;
@@ -294,7 +293,6 @@ html, body {
 
 ::-webkit-scrollbar-track {
   background: var(--titlebar-lower-colour);
-  position: absolute;
 }
 
 ::-webkit-scrollbar-track:vertical, ::-webkit-scrollbar-thumb:vertical, ::-webkit-scrollbar-corner {

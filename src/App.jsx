@@ -42,18 +42,18 @@ export default function App() {
   const textEditorRef = React.useRef();
   const versionDisplayRef = React.useRef();
 
-  const onResize = ({ event, payload }) => {
-    console.log(payload.width)
-    if (payload.width < toolbarRef.current.scrollWidth + 2) {
-      toolbarRef.current.classList.add("titlebar:toolbar:scroll")
-    } else {
-      toolbarRef.current.classList.remove("titlebar:toolbar:scroll")
-    }
-  }
-  appWindow.listen('tauri://resize', onResize)
+  // const onResize = ({ event, payload }) => {
+  //   console.log(payload.width)
+  //   if (payload.width < toolbarRef.current.scrollWidth + 2) {
+  //     toolbarRef.current.classList.add("titlebar:toolbar:scroll")
+  //   } else {
+  //     toolbarRef.current.classList.remove("titlebar:toolbar:scroll")
+  //   }
+  // }
+  // appWindow.listen('tauri://resize', onResize)
 
   React.useEffect(() => {
-    onResize({event: "", payload: {width: "580"}});
+    // onResize({event: "", payload: {width: "580"}});
     versionDisplayRef.current.innerText = `Version ${version}`
   })
 
@@ -276,47 +276,66 @@ export default function App() {
             </div>
           </>
         }
+
+        {/* <div className="flex-left">
+          <button className="topbar-button" onClick={openFile}>Open</button>
+          <Divider/>
+          <button className="topbar-button" onClick={newFile}>New</button>
+          <Divider/>
+          <div>
+            <button className="topbar-button" onClick={saveFile}>Save</button>
+            <button className="topbar-button" onClick={saveFileAs}>Save as</button>
+          </div>
+        </div>
+
+        <div className="flex-right">
+          <Tooltip2 hoverOpenDelay={350} content="Toggle Menu">
+            <Button minimal small icon={<Icon icon="chevron-down" className="titlebar:icon"/>} onClick={() => setMenuOpen(!menuOpen)}/>
+          </Tooltip2>
+          <Divider/>
+          <WindowControl/>
+        </div> */}
       </div>
     
       {menuOpen ?
         <div ref={toolbarRef} className="titlebar:toolbar" onWheel={(event) => toolbarRef.current.scrollLeft += event.deltaY * 3} onContextMenu={disableDefaultEvent}>     
           <span className="titlebar:toolbar:text">Text Wrap: </span>
           <ButtonGroup minimal small>
-            <Button className="titlebar:text" small text={textWrap ? "Disable": "Enable"} onClick={() => setTextWrap(!textWrap)}/>
+            <Button className="titlebar:text titlebar:toolbar:button" small text={textWrap ? "Disable": "Enable"} onClick={() => setTextWrap(!textWrap)}/>
           </ButtonGroup>
 
           <Divider/>
           <span className="titlebar:toolbar:text">Font Size: </span>
 
           <ButtonGroup minimal small>
-            <Button className="titlebar:text" small icon={<Icon icon="plus" className="titlebar:icon"/>} onClick={() => changeFontSize(1)}/>
-            <Button className="titlebar:text" small icon={<Icon icon="minus" className="titlebar:icon"/>} onClick={() => changeFontSize(-1)}/>
+            <Button className="titlebar:text titlebar:toolbar:button" small icon={<Icon icon="plus" className="titlebar:icon"/>} onClick={() => changeFontSize(1)}/>
+            <Button className="titlebar:text titlebar:toolbar:button" small icon={<Icon icon="minus" className="titlebar:icon"/>} onClick={() => changeFontSize(-1)}/>
           </ButtonGroup>
 
           <Divider/>
           <span className="titlebar:toolbar:text">Font Type: </span>
 
           <ButtonGroup minimal small>
-            <Button className="titlebar:text" small text="Sans-Serif" onClick={() => changeFont("sans-serif")}/>
-            <Button className="titlebar:text" small text="Serif" onClick={() => changeFont("serif")}/>
-            <Button className="titlebar:text" small text="Monospace" onClick={() => changeFont("monospace")}/>
+            <Button className="titlebar:text titlebar:toolbar:button" small text="Sans-Serif" onClick={() => changeFont("sans-serif")}/>
+            <Button className="titlebar:text titlebar:toolbar:button" small text="Serif" onClick={() => changeFont("serif")}/>
+            <Button className="titlebar:text titlebar:toolbar:button" small text="Monospace" onClick={() => changeFont("monospace")}/>
           </ButtonGroup>
 
           <Divider/>
           <span className="titlebar:toolbar:text">Security: </span>
 
           <ButtonGroup minimal small>
-            <Button className="titlebar:text" small icon={<Icon icon="lock" className="titlebar:icon"/>} onClick={notImplemented}/>
-            <Button className="titlebar:text" small icon={<Icon icon="unlock" className="titlebar:icon"/>} onClick={notImplemented}/>
-            <Button className="titlebar:text" small text="Calculate SHA256" onClick={notImplemented}/>
-            <Button className="titlebar:text" small text="Calculate SHA512" onClick={notImplemented}/>
+            <Button className="titlebar:text titlebar:toolbar:button" small icon={<Icon icon="lock" className="titlebar:icon"/>} onClick={notImplemented}/>
+            <Button className="titlebar:text titlebar:toolbar:button" small icon={<Icon icon="unlock" className="titlebar:icon"/>} onClick={notImplemented}/>
+            <Button className="titlebar:text titlebar:toolbar:button" small text="Calculate SHA256" onClick={notImplemented}/>
+            <Button className="titlebar:text titlebar:toolbar:button" small text="Calculate SHA512" onClick={notImplemented}/>
           </ButtonGroup>
 
           <Divider/>
           <span className="titlebar:toolbar:text">Theme: </span>
 
           <ButtonGroup minimal small>
-            <Button className="titlebar:text" small text={currentTheme === "dark" ? "To Light Mode": "To Dark Mode"} onClick={toggleTheme}/>
+            <Button className="titlebar:text titlebar:toolbar:button" small text={currentTheme === "dark" ? "To Light Mode": "To Dark Mode"} onClick={toggleTheme}/>
           </ButtonGroup>
         </div>
       :null}

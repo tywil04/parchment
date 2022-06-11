@@ -64,7 +64,8 @@
         "resizable": true,
         "title": "Notepad",
         "width": 580,
-        "decorations": false
+        "decorations": false,
+        "transparent": true
       }
     ]
   }

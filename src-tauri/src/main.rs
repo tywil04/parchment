@@ -3,12 +3,13 @@
   windows_subsystem = "windows"
 )]
 
-// windows (they support the shadows plugin)
-#[cfg(target_os = "windows")]
-fn main() {
-  use window_shadows::set_shadow;
-  use tauri::Manager;
+#[cfg(any(target_os = "windows", target_os = "macos"))]
+use window_shadows::set_shadow;
 
+use tauri::Manager;
+
+fn main() {
+  #[cfg(target_os = "windows")]
   tauri::Builder::default()
     .setup(|app| {
       let window = app.get_window("main").unwrap();
@@ -17,12 +18,17 @@ fn main() {
     })
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
-}
 
-// Any platform that is not windows
-#[cfg(not(target_os = "windows"))]
-fn main() {
+  #[cfg(not(target_os = "windows"))]
   tauri::Builder::default()
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }
+
+// not windows + not macos
+// #[cfg(not(any(target_os = "windows", target_os = "macos")))]
+// fn main() {
+//   tauri::Builder::default()
+//     .run(tauri::generate_context!())
+//     .expect("error while running tauri application");
+// }
