@@ -38,7 +38,8 @@ export default function App() {
   const textEditorRef = React.useRef();
 
   const onResize = ({ event, payload }) => {
-    if (payload.width < toolbarRef.current.scrollWidth) {
+    console.log(payload.width)
+    if (payload.width < toolbarRef.current.scrollWidth + 2) {
       toolbarRef.current.classList.add("titlebar:toolbar:scroll")
     } else {
       toolbarRef.current.classList.remove("titlebar:toolbar:scroll")
@@ -183,81 +184,74 @@ export default function App() {
     }
   }
 
+  const WindowControl = () => {
+    return (
+      <ButtonGroup small minimal>
+        <Button small icon="minus" onClick={() => appWindow.minimize()}/>
+        <Button small icon="small-square" onClick={() => appWindow.toggleMaximize()}/>
+        <Button small icon="cross" onClick={closeApplication}/>
+      </ButtonGroup>
+    )
+  }
+
+  const FileControl = () => {
+    return (
+      <>
+        <ButtonGroup minimal small>
+          <Button small text="Open" className="titlebar:button" onClick={openFile}/>
+        </ButtonGroup>
+
+        <Divider/>
+
+        <ButtonGroup minimal small>
+          <Button small text="New" className="titlebar:button" onClick={newFile}/>
+        </ButtonGroup>
+
+        <Divider/>
+
+        <ButtonGroup minimal small>
+          <Button small text="Save" className="titlebar:button" onClick={saveFile}/>
+          <Button small text="Save as" className="titlebar:button" onClick={saveFileAs}/>
+        </ButtonGroup>
+      </>
+    )
+  }
+
+  const MenuVisibilityToggle = () => {
+    return (
+      <ButtonGroup minimal small>
+        <Tooltip2 hoverOpenDelay={350} content="Toggle Menu">
+          <Button small icon={<Icon icon="chevron-down" className="titlebar:icon"/>} onClick={() => setMenuOpen(!menuOpen)}/>
+        </Tooltip2>
+      </ButtonGroup>
+    )
+  }
+
   return (
     <>
       <div data-tauri-drag-region className="titlebar" onContextMenu={disableDefaultEvent}>
         {platformName === "Darwin"?
           <>
             <div className="titlebar:left">
-              <ButtonGroup small minimal>
-                <Button small icon="cross" onClick={closeApplication}/>
-                <Button small icon="small-square" onClick={() => appWindow.toggleMaximize()}/>
-                <Button small icon="minus" onClick={() => appWindow.minimize()}/> 
-              </ButtonGroup>
-
+              <WindowControl/>
               <Divider/>
-
-              <ButtonGroup minimal small>
-                <Button small text="Open" className="titlebar:button" onClick={openFile}/>
-              </ButtonGroup>
-
-              <Divider/>
-
-              <ButtonGroup minimal small>
-                <Button small text="New" className="titlebar:button" onClick={newFile}/>
-              </ButtonGroup>
-
-              <Divider/>
-
-              <ButtonGroup minimal small>
-                <Button small text="Save" className="titlebar:button" onClick={saveFile}/>
-                <Button small text="Save as" className="titlebar:button" onClick={saveFileAs}/>
-              </ButtonGroup>
+              <FileControl/>
             </div>
 
             <div className="titlebar:right">
-              <ButtonGroup minimal small>
-                <Tooltip2 hoverOpenDelay={350} content="Toggle Menu">
-                  <Button small icon={<Icon icon="chevron-down" className="titlebar:icon"/>} onClick={() => setMenuOpen(!menuOpen)}/>
-                </Tooltip2>
-              </ButtonGroup>
+              <MenuVisibilityToggle/>
             </div>
           </>
         :
           <>
             <div className="titlebar:left">
-              <ButtonGroup minimal small>
-                <Button small text="Open" className="titlebar:button" onClick={openFile}/>
-              </ButtonGroup>
-
-              <Divider/>
-
-              <ButtonGroup minimal small>
-                <Button small text="New" className="titlebar:button" onClick={newFile}/>
-              </ButtonGroup>
-
-              <Divider/>
-
-              <ButtonGroup minimal small>
-                <Button small text="Save" className="titlebar:button" onClick={saveFile}/>
-                <Button small text="Save as" className="titlebar:button" onClick={saveFileAs}/>
-              </ButtonGroup>
+              <FileControl/>
             </div>
 
             <div className="titlebar:right">
-              <ButtonGroup minimal small>
-                <Tooltip2 hoverOpenDelay={350} content="Show Menu">
-                  <Button small icon={<Icon icon="chevron-down" className="titlebar:icon"/>} onClick={() => setMenuOpen(!menuOpen)}/>
-                </Tooltip2>
-              </ButtonGroup>
-
+              <MenuVisibilityToggle/>
               <Divider/>
-
-              <ButtonGroup small minimal>
-                <Button small icon="minus" onClick={() => appWindow.minimize()}/>
-                <Button small icon="small-square" onClick={() => appWindow.toggleMaximize()}/>
-                <Button small icon="cross" onClick={closeApplication}/>
-              </ButtonGroup>
+              <WindowControl/>
             </div>
           </>
         }
