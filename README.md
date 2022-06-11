@@ -12,6 +12,8 @@ This project uses the following:
 
 This app currently doesn't follow Tauri's best practices. All of the business logic is implemented in the same place as the UI logic, this is bad design and possibly insecure. I will be changing this soon.
 
+This app works on MacOS, Windows and Linux.
+
 #### Windows 11 Dark Mode 
 ![Windows 11 Dark Mode (With Text Wrapping)](/screenshots/win11-dark-wrapped.png)
 
@@ -21,3 +23,16 @@ This app currently doesn't follow Tauri's best practices. All of the business lo
 ![Windows 11 Light Mode (With Text Wrapping)](/screenshots/win11-light-wrapped.png)
 
 ![Windows 11 Light Mode](/screenshots/win11-light.png)
+
+### To Do
+- [ ] Security Settings
+- [ ] Hotkeys
+- [ ] Clean up CSS
+- [x] Test Windows
+- [x] Test MacOS
+- [x] Test Linux
+- [x] Provide User With Feedback
+
+### Ideas
+- More Configuration
+- Replace BlueprintJS with only CSS
