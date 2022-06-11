@@ -1,28 +1,14 @@
 import React from "react";
-import ReactDOM from 'react-dom/client';
 
 import { appWindow } from '@tauri-apps/api/window'
-import { save as saveDialog, open as openDialog } from "@tauri-apps/api/dialog"
+import { save as saveDialog, open as openDialog, ask as askDialog, message } from "@tauri-apps/api/dialog"
 import { readTextFile, writeFile } from "@tauri-apps/api/fs";
 import { type } from "@tauri-apps/api/os";
 
-import { Divider, Dialog, Button, ButtonGroup, Classes } from "@blueprintjs/core";
+import { Divider, Button, ButtonGroup, Icon, Toaster, Position } from "@blueprintjs/core";
 import { Tooltip2 } from "@blueprintjs/popover2";
 
-// To do:
-// Settings:
-//  Theme selector: Light/Dark/Custom?
-//  Text wrapping: Bool
-//  Tabs (e.g spaces vs tab), if spaces how many etc
-//  Autosave
-//    
-// Userfeed back (e.g: Failed to save, try again etc)
-//
-// Encrypting Contents Functionality 
-// 
-// Change Tauri Model, Lock down tauri / fix security things
-// 
-// Etc
+const toast = Toaster.create({ position: Position.BOTTOM_RIGHT });
 
 var platformName = "";
 type().then(data => platformName = data)
@@ -40,13 +26,12 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener("change", eve
   }
 })
 
-
-
 export default function App() {
   const [currentFilePath, setCurrentFilePath] = React.useState("");
   const [textEdited, setTextEdited] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(true);
   const [textWrap, setTextWrap] = React.useState(false);
+  const [fontSize, setFontSize] = React.useState(0);
   const toolbarRef = React.useRef();
   const fileNameRef = React.useRef();
   const statisticsDisplayRef = React.useRef();
@@ -80,106 +65,46 @@ export default function App() {
   // eslint-disable-next-line
   const getFileNameFromPath = (filePath) => filePath.replace(/^.*(\\|\/|\:)/, "");
 
-  // Generate a random hexadecimal string
-  const generateRandomString = () => Math.random().toString(16).substring(2, 14);
+  const notImplemented = () => {
+    message("This application is still in development and this feature is not implemented yet. This button is a placeholder.");
+  }
 
-  // Renders a dialog that returns a promise. A success is the save button being pressed, a failure is the delete button being pressed
-  const runDiscardDialog = () => {
-    return new Promise((success, failure) => {
-      try {
-        const random = "dialog-" + generateRandomString();
-
-        // Create a div with a random id that will be used to hold the dialog
-        var div = document.createElement("div")
-        div.id = random;
-        document.querySelector("body").appendChild(div);
-
-        // Dialog component
-        const InternalDialog = (props) => {
-          const [open, setOpen] = React.useState(true);
-          return (
-            <Dialog usePortal={false} isOpen={open} onClose={() => setOpen(false)} onClosed={() => document.getElementById(random).remove()}>
-              <div className={Classes.DIALOG_BODY}>
-                <p>
-                  What would you like to do with this file? You can discard it, save it or continue editing it.
-                </p>
-              </div>
-              <div className={Classes.DIALOG_FOOTER}>
-                <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-                  <Button small text="Continue Editing" onClick={() => {setOpen(false); props.success("continue")}}/>
-                  <Button small intent="danger" text="Discard" onClick={() => {setOpen(false); props.success("discard")}}/>
-                  <Button small intent="primary" text="Save" onClick={() => {setOpen(false); props.success("save")}}/>
-                </div>
-              </div>
-            </Dialog>
-          )
-        }
-
-        // Render the dialog in the div that was created
-        ReactDOM.createRoot(document.getElementById(random)).render(
-          <InternalDialog success={success}/>
-        );
-      } catch {
-        failure();
+  const discardQuery = (good, badToastMessage) => {
+    askDialog("Would you like to discard your work?").then((yes) => {
+      if (yes) {
+        good();
+      } else {
+        toast.show({ message: badToastMessage });
       }
     })
   }
 
-  const runNotImplementedDialog = () => {
-    const random = "dialog-" + generateRandomString();
-
-    // Create a div with a random id that will be used to hold the dialog
-    var div = document.createElement("div")
-    div.id = random;
-    document.querySelector("body").appendChild(div);
-
-    // Dialog component
-    const InternalDialog = () => {
-      const [open, setOpen] = React.useState(true);
-      return (
-        <Dialog usePortal={false} isOpen={open} onClose={() => setOpen(false)} onClosed={() => document.getElementById(random).remove()}>
-          <div className={Classes.DIALOG_BODY}>
-            <p>
-              This application is still in development and this feature is not implemented yet. This button is a placeholder, sorry.
-            </p>
-          </div>
-          <div className={Classes.DIALOG_FOOTER}>
-            <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-              <Button small text="Okay" onClick={() => {setOpen(false)}}/>
-            </div>
-          </div>
-        </Dialog>
-      )
-    }
-
-    // Render the dialog in the div that was created
-    ReactDOM.createRoot(document.getElementById(random)).render(
-      <InternalDialog/>
-    );
-  }
-
   const saveFileAs = () => {
     return saveDialog().then((filePath) => {
-      writeFile({contents: textEditorRef.current.value, path: filePath});
-      fileNameRef.current.innerText = getFileNameFromPath(filePath);
-      setCurrentFilePath(filePath);
-      setTextEdited(false)
-    })
+      writeFile({contents: textEditorRef.current.value, path: filePath}).then(
+        () => {
+          fileNameRef.current.innerText = getFileNameFromPath(filePath);
+          setCurrentFilePath(filePath);
+          setTextEdited(false)
+        },
+        () => toast.show({ message: "Error while saving, please try again." }))
+    }, () => toast.show({ message: "Error while saving, please try again." }))
   }
 
   const saveFile = () => {
-    // If the current filePath is known then save the file
     if (currentFilePath !== "") {
       return new Promise((success, failure) => {
-        try {
-          writeFile({contents: textEditorRef.current.value, path: currentFilePath});
-          setTextEdited(false);
-          success();
-        } catch {
-          failure();
-        }
+        writeFile({contents: textEditorRef.current.value, path: currentFilePath}).then(
+          () => {
+            setTextEdited(false);
+            success();
+          },
+          () => {
+            failure();
+            toast.show({ message: "Error while saving, please try again." });
+          }
+        );
       })
-    // If the current filePath is not known then ask where to save the file
     } else {
       return saveFileAs();
     }
@@ -194,84 +119,69 @@ export default function App() {
   }
 
   const newFile = () => {
-    // If text has not been edited, run clear the textarea and stats display
     if (textEdited === false) {
       clear();
-    // If the text has been edited and the text isnt an empty string, then run `runDiscardDialog` and await the response
     } else {
-      runDiscardDialog().then(
-        (response) => {
-          switch(response) {
-            case "save": {
-              const file = saveFile();
-              file.then(clear);
-              break;
-            };
-            case "discard": clear(); break;
-            default: break;
-          }
-        },
-      )
+      discardQuery(clear, "To create a new file please save or discard your work.");
     }
   }
 
   const open = () => {
     clear(); // Clear all
-    openDialog().then((filePath) => {
+    return openDialog().then((filePath) => {
       readTextFile(filePath).then((text) => {
         textEditorRef.current.value = text;
         setCurrentFilePath(filePath);
         fileNameRef.current.innerText = getFileNameFromPath(filePath);
         calculateWordsAndCharacters(); // Update words and characters (It should be 0, however its best to run the function)
-      })
-    })
+      }, () => toast.show({ message: "Error while opening file, please try again." }))
+    }, () => toast.show({ message: "Error while opening file, please try again." }))
   }
 
   const openFile = () => {
-    // If text has not been edited, run the `open` system dialog
     if (textEdited === false) {
       open();
-    // If the text has been edited and the text isnt an empty string, then run `runDiscardDialog` and await the response
     } else {
-      runDiscardDialog().then(
-        (response) => {
-          switch(response) {
-            case "save": {
-              const file = saveFile();
-              file.then(open);
-              break;
-            };
-            case "discard": open(); break;
-            default: break;
-          }
-        },
-      )
+      discardQuery(open, "To open a new file please save or discard your work.");
     }
   }
 
   const closeApplication = () => {
-    // If text has not been edited, close application
     if (textEdited === false) {
       appWindow.close();
-    // If the text has been edited and the text isnt an empty string, then run `runDiscardDialog` and await the response
     } else {
-      runDiscardDialog().then(
-        (response) => {
-          switch(response) {
-            case "save": {
-              const file = saveFile();
-              file.then(appWindow.close);
-              break;
-            };
-            case "discard": appWindow.close(); break; 
-            default: break;
-          }
-        }
-      )
+      discardQuery(() => appWindow.close(), "To close please save or discard your work.");
     }
   }
 
-  console.log(platformName)
+  const changeFont = (family) => {
+    switch (family) {
+      case "serif": {
+        textEditorRef.current.classList.add("serif");
+        textEditorRef.current.classList.remove("sans-serif");
+        textEditorRef.current.classList.remove("monospace");
+        break;
+      }
+      case "monospace": {
+        textEditorRef.current.classList.remove("serif");
+        textEditorRef.current.classList.remove("sans-serif");
+        textEditorRef.current.classList.add("monospace");
+        break;
+      }
+      default: {
+        textEditorRef.current.classList.remove("serif");
+        textEditorRef.current.classList.add("sans-serif");
+        textEditorRef.current.classList.remove("monospace");
+        break;
+      }
+    }
+  }
+
+  const changeFontSize = (change) => {
+    if (fontSize + change <= 5 && fontSize + change >= -5) {
+      setFontSize(fontSize + change);
+    }
+  }
 
   return (
     <>
@@ -308,11 +218,7 @@ export default function App() {
             <div className="titlebar:right">
               <ButtonGroup minimal small>
                 <Tooltip2 hoverOpenDelay={350} content="Toggle Menu">
-                  <Button small icon="chevron-down" onClick={() => setMenuOpen(!menuOpen)}/>
-                </Tooltip2>
-
-                <Tooltip2 hoverOpenDelay={350} content="Settings">
-                  <Button small icon="cog" onClick={runNotImplementedDialog}/>
+                  <Button small icon={<Icon icon="chevron-down" className="titlebar:icon"/>} onClick={() => setMenuOpen(!menuOpen)}/>
                 </Tooltip2>
               </ButtonGroup>
             </div>
@@ -341,11 +247,7 @@ export default function App() {
             <div className="titlebar:right">
               <ButtonGroup minimal small>
                 <Tooltip2 hoverOpenDelay={350} content="Show Menu">
-                  <Button small icon="chevron-down" onClick={() => setMenuOpen(!menuOpen)}/>
-                </Tooltip2>
-
-                <Tooltip2 hoverOpenDelay={350} content="Settings">
-                  <Button small icon="cog" onClick={runNotImplementedDialog}/>
+                  <Button small icon={<Icon icon="chevron-down" className="titlebar:icon"/>} onClick={() => setMenuOpen(!menuOpen)}/>
                 </Tooltip2>
               </ButtonGroup>
 
@@ -363,31 +265,41 @@ export default function App() {
     
       {menuOpen ?
         <div ref={toolbarRef} className="titlebar:toolbar" onWheel={(event) => toolbarRef.current.scrollLeft += event.deltaY * 3} onContextMenu={disableDefaultEvent}>     
-          <span className="titlebar:text:semibold">Utilities: </span>
+          <span className="titlebar:toolbar:text">Display: </span>
 
           <ButtonGroup minimal small>
             <Button className="titlebar:text" small text="Toggle Text Wrapping" onClick={() => setTextWrap(!textWrap)}/>
           </ButtonGroup>
 
           <Divider/>
-          <span className="titlebar:text:semibold">Security: </span>
+          <span className="titlebar:toolbar:text">Font Size: </span>
 
           <ButtonGroup minimal small>
-            <Button className="titlebar:text" small text="Encrypt file" onClick={runNotImplementedDialog}/>
-            <Button className="titlebar:text" small text="Decrypt file" onClick={runNotImplementedDialog}/>
-            <Button className="titlebar:text" small text="Calculate SHA256" onClick={runNotImplementedDialog}/>
-            <Button className="titlebar:text" small text="Calculate SHA512" onClick={runNotImplementedDialog}/>
+            <Button className="titlebar:text" small icon={<Icon icon="plus" className="titlebar:icon"/>} onClick={() => changeFontSize(1)}/>
+            <Button className="titlebar:text" small icon={<Icon icon="minus" className="titlebar:icon"/>} onClick={() => changeFontSize(-1)}/>
           </ButtonGroup>
 
           <Divider/>
-          <span className="titlebar:text:semibold">Templates: </span>
+          <span className="titlebar:toolbar:text">Font Type: </span>
 
           <ButtonGroup minimal small>
-            <Button className="titlebar:text" small text="Create Template" onClick={runNotImplementedDialog}/>
+            <Button className="titlebar:text" small text="Sans-Serif" onClick={() => changeFont("sans-serif")}/>
+            <Button className="titlebar:text" small text="Serif" onClick={() => changeFont("serif")}/>
+            <Button className="titlebar:text" small text="Monospace" onClick={() => changeFont("monospace")}/>
           </ButtonGroup>
 
           <Divider/>
-          <span className="titlebar:text:semibold">Theme: </span>
+          <span className="titlebar:toolbar:text">Security: </span>
+
+          <ButtonGroup minimal small>
+            <Button className="titlebar:text" small icon={<Icon icon="lock" className="titlebar:icon"/>} onClick={notImplemented}/>
+            <Button className="titlebar:text" small icon={<Icon icon="unlock" className="titlebar:icon"/>} onClick={notImplemented}/>
+            <Button className="titlebar:text" small text="Calculate SHA256" onClick={notImplemented}/>
+            <Button className="titlebar:text" small text="Calculate SHA512" onClick={notImplemented}/>
+          </ButtonGroup>
+
+          <Divider/>
+          <span className="titlebar:toolbar:text">Theme: </span>
 
           <ButtonGroup minimal small>
             <Button className="titlebar:text" small text="Dark" onClick={() => document.querySelector("body").classList.add("bp4-dark")}/>
@@ -403,7 +315,7 @@ export default function App() {
       </div>
 
       <div className="content">
-        <textarea wrap={textWrap ? "on": "off"} ref={textEditorRef} spellCheck={false} onChange={(event) => {calculateWordsAndCharacters(); setTextEdited(true)}} className="texteditor"/>
+        <textarea wrap={textWrap ? "on": "off"} ref={textEditorRef} spellCheck={false} onChange={(event) => {calculateWordsAndCharacters(); setTextEdited(true)}} className={`texteditor texteditor:fontsize:${fontSize}`}/>
       </div>
     </>
   );
