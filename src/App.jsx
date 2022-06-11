@@ -1,5 +1,6 @@
 import React from "react";
 
+import { getVersion } from "@tauri-apps/api/app"
 import { appWindow } from '@tauri-apps/api/window'
 import { save as saveDialog, open as openDialog, ask as askDialog, message } from "@tauri-apps/api/dialog"
 import { readTextFile, writeFile } from "@tauri-apps/api/fs";
@@ -8,13 +9,13 @@ import { type } from "@tauri-apps/api/os";
 import { Divider, Button, ButtonGroup, Icon, Toaster, Position } from "@blueprintjs/core";
 import { Tooltip2 } from "@blueprintjs/popover2";
 
-const toast = Toaster.create({ position: Position.BOTTOM_RIGHT });
-
 var platformName = "";
-type().then(data => platformName = data)
+var version = "";
 
-var defaultDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
-if (defaultDarkTheme === true) {
+type().then(data => platformName = data);
+getVersion().then(data => version = data);
+
+if (window.matchMedia('(prefers-color-scheme: dark)').matches === true) {
   document.querySelector("body").classList.add("bp4-dark");
 }
 
@@ -26,16 +27,20 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener("change", eve
   }
 })
 
+const toast = Toaster.create({ position: Position.BOTTOM_RIGHT });
+
 export default function App() {
   const [currentFilePath, setCurrentFilePath] = React.useState("");
   const [textEdited, setTextEdited] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(true);
   const [textWrap, setTextWrap] = React.useState(false);
   const [fontSize, setFontSize] = React.useState(0);
+  const [currentTheme, setCurrentTheme] = React.useState(document.querySelector("body").classList.contains("bp4-dark") ? "dark": "light")
   const toolbarRef = React.useRef();
   const fileNameRef = React.useRef();
   const statisticsDisplayRef = React.useRef();
   const textEditorRef = React.useRef();
+  const versionDisplayRef = React.useRef();
 
   const onResize = ({ event, payload }) => {
     console.log(payload.width)
@@ -48,7 +53,8 @@ export default function App() {
   appWindow.listen('tauri://resize', onResize)
 
   React.useEffect(() => {
-    onResize({event: "", payload: {width: "580"}})
+    onResize({event: "", payload: {width: "580"}});
+    versionDisplayRef.current.innerText = `Version ${version}`
   })
 
   const disableDefaultEvent = (event) => {
@@ -184,12 +190,27 @@ export default function App() {
     }
   }
 
-  const WindowControl = () => {
+  const toggleTheme = () => {
+    setCurrentTheme(currentTheme === "dark" ? "light": "dark");
+    document.querySelector("body").classList.toggle("bp4-dark");
+  }
+
+  const WindowControl = (props) => {
     return (
       <ButtonGroup small minimal>
-        <Button small icon="minus" onClick={() => appWindow.minimize()}/>
-        <Button small icon="small-square" onClick={() => appWindow.toggleMaximize()}/>
-        <Button small icon="cross" onClick={closeApplication}/>
+        {props.reverse === true ?
+          <>
+          <Button small icon="cross" onClick={closeApplication}/>
+          <Button small icon="small-square" onClick={() => appWindow.toggleMaximize()}/>
+          <Button small icon="minus" onClick={() => appWindow.minimize()}/>
+          </>
+        :
+          <>
+          <Button small icon="minus" onClick={() => appWindow.minimize()}/>
+          <Button small icon="small-square" onClick={() => appWindow.toggleMaximize()}/>
+          <Button small icon="cross" onClick={closeApplication}/>
+          </>
+        }
       </ButtonGroup>
     )
   }
@@ -233,7 +254,7 @@ export default function App() {
         {platformName === "Darwin"?
           <>
             <div className="titlebar:left">
-              <WindowControl/>
+              <WindowControl reverse={true}/>
               <Divider/>
               <FileControl/>
             </div>
@@ -259,10 +280,9 @@ export default function App() {
     
       {menuOpen ?
         <div ref={toolbarRef} className="titlebar:toolbar" onWheel={(event) => toolbarRef.current.scrollLeft += event.deltaY * 3} onContextMenu={disableDefaultEvent}>     
-          <span className="titlebar:toolbar:text">Display: </span>
-
+          <span className="titlebar:toolbar:text">Text Wrap: </span>
           <ButtonGroup minimal small>
-            <Button className="titlebar:text" small text="Toggle Text Wrapping" onClick={() => setTextWrap(!textWrap)}/>
+            <Button className="titlebar:text" small text={textWrap ? "Disable": "Enable"} onClick={() => setTextWrap(!textWrap)}/>
           </ButtonGroup>
 
           <Divider/>
@@ -296,16 +316,22 @@ export default function App() {
           <span className="titlebar:toolbar:text">Theme: </span>
 
           <ButtonGroup minimal small>
-            <Button className="titlebar:text" small text="Dark" onClick={() => document.querySelector("body").classList.add("bp4-dark")}/>
-            <Button className="titlebar:text" small text="Light" onClick={() => document.querySelector("body").classList.remove("bp4-dark")}/>
+            <Button className="titlebar:text" small text={currentTheme === "dark" ? "To Light Mode": "To Dark Mode"} onClick={toggleTheme}/>
           </ButtonGroup>
         </div>
       :null}
 
       <div className="titlebar:display" onContextMenu={disableDefaultEvent}>
-        <span className="titlebar:text titlebar:display:left" hidden={!textEdited}>~</span>
-        <span ref={fileNameRef} className="titlebar:text titlebar:display:left"></span>
-        <span ref={statisticsDisplayRef} className="titlebar:text titlebar:display:right">0 Words,  0 Characters</span>
+        <div className="titlebar:display:left">
+          <span className="titlebar:text" hidden={!textEdited}>~</span>
+          <span ref={fileNameRef} className="titlebar:text"></span>
+        </div>
+
+        <div className="titlebar:display:right">
+          <span ref={statisticsDisplayRef} className="titlebar:text">0 Words,  0 Characters</span>
+          <Divider className="titlebar:display:divider"/>
+          <span ref={versionDisplayRef} className="titlebar:text">Version Unknown</span>
+        </div>
       </div>
 
       <div className="content">
