@@ -12,7 +12,7 @@ This project uses the following:
 
 This app currently doesn't follow Tauri's best practices. All of the business logic is implemented in the same place as the UI logic, this is bad design and possibly insecure. I will be changing this soon.
 
-This app works on MacOS, Windows and Linux.
+This app works on MacOS, Windows and Linux. All versions look and function the same. The only difference is that MacOS has the window controls on the left.
 
 #### Windows 11 Dark Mode 
 ![Windows 11 Dark Mode (With Text Wrapping)](/screenshots/win11-dark-wrapped.png)
