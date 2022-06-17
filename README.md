@@ -25,6 +25,7 @@ This app works on MacOS, Windows and Linux.
 ![Windows 11 Light Mode](/screenshots/win11-light.png)
 
 ### To Do
+- [ ] Migrate Business Logic From JavaScript to Rust
 - [ ] Security Settings
 - [ ] Hotkeys
 - [ ] Clean up CSS
