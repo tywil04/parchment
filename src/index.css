@@ -8,3 +8,31 @@ html, body, #root {
   padding: 0;
   margin: 0;
 }
+
+#root {
+  @apply overflow-hidden
+}
+
+::-webkit-scrollbar {
+  @apply w-[14px] h-[14px] absolute
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-100 dark:bg-gray-900 rounded-none
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-50 dark:bg-gray-800
+}
+
+::-webkit-scrollbar-track:vertical, ::-webkit-scrollbar-thumb:vertical, ::-webkit-scrollbar-corner {
+  border-left: 1px solid rgb(55 65 81);
+}
+
+::-webkit-scrollbar-track:horizontal, ::-webkit-scrollbar-thumb:horizontal, ::-webkit-scrollbar-corner {
+  border-top: 1px solid rgb(55 65 81);
+}
+
+::-webkit-scrollbar-corner {
+  @apply bg-gray-50 dark:bg-gray-800
+}
