@@ -26,6 +26,8 @@ This app works on MacOS, Windows and Linux. All versions look and function the s
 
 ### To Do
 - [ ] Migrate Business Logic From JavaScript to Rust
+- [ ] Migrate from React to SolidJS
+- [ ] Migrate from BlueprintJS to TailwindCSS
 - [ ] Security Settings
 - [ ] Hotkeys
 - [ ] Clean up CSS
@@ -36,4 +38,3 @@ This app works on MacOS, Windows and Linux. All versions look and function the s
 
 ### Ideas
 - More Configuration
-- Replace BlueprintJS with only CSS
