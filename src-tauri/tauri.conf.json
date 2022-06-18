@@ -2,9 +2,9 @@
   "$schema": "..\\node_modules/@tauri-apps/cli\\schema.json",
   "build": {
     "beforeBuildCommand": "yarn build",
-    "beforeDevCommand": "yarn dev",
+    "beforeDevCommand": "yarn start",
     "devPath": "http://localhost:3000",
-    "distDir": "../dist"
+    "distDir": "../build"
   },
   "package": {
     "productName": "Notepad",
@@ -15,8 +15,7 @@
       "fs": { "writeFile": true, "readFile": true },
       "os": { "all": true },
       "dialog": { "open": true, "save": true, "ask": true, "message": true },
-      "window": { "maximize": true, "unmaximize": true, "minimize": true, "unminimize": true, "close": true, "startDragging": true },
-      "shell": { "open": true }
+      "window": { "maximize": true, "unmaximize": true, "minimize": true, "unminimize": true, "close": true, "startDragging": true, "center": true, "setResizable": true }
     },
     "bundle": {
       "active": true,
