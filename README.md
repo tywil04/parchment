@@ -15,6 +15,17 @@ This app currently doesn't follow Tauri's best practices. All of the business lo
 
 This app works on MacOS, Windows and Linux. All versions look and function the same. The only difference is that MacOS has the window controls on the left.
 
+# Usage
+Head to the releases page to download pre-build executables. 
+
+If you would like to build this project from scratch you will need to do the following
+```
+git clone https://github.com/tywil04/tauri-notepad.git
+cd tauri-notepad
+yarn
+yarn tauri build
+```
+
 #### Windows 11 Dark Mode 
 ![Windows 11 Dark Mode (With Text Wrapping)](/screenshots/win11-dark-wrapped.png)
 
