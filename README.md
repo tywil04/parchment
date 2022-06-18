@@ -1,34 +1,41 @@
-## Usage
+# Tauri Notepad
 
-Those templates dependencies are maintained via [pnpm](https://pnpm.io) via `pnpm up -Lri`.
+### Warning: Its only in a minimal working state
 
-This is the reason you see a `pnpm-lock.yaml`. That being said, any package manager will work. This file can be safely be removed once you clone a template.
+A minimal text editor 
 
-```bash
-$ npm install # or pnpm install or yarn install
-```
+This project uses the following:
+- SolidJS for a very performant and lightweight application
+- TailwindCSS to style
+- Tauri a Rust wrapper to create desktop applications using web technologies
+- Uses this [Notepad](https://www.flaticon.com/free-icon/notebook_346081?related_id=346081&origin=search) icon from Flaticon (free to use for personal and commercial purposes) for the taskbar icon.
+- A few [Tabler Icons](https://tablericons.com/) e.g for window control
 
-### Learn more on the [Solid Website](https://solidjs.com) and come chat with us on our [Discord](https://discord.com/invite/solidjs)
+This app currently doesn't follow Tauri's best practices. All of the business logic is implemented in the same place as the UI logic, this is bad design is classified as insecure. I will be changing this soon.
 
-## Available Scripts
+This app works on MacOS, Windows and Linux. All versions look and function the same. The only difference is that MacOS has the window controls on the left.
 
-In the project directory, you can run:
+#### Windows 11 Dark Mode 
+![Windows 11 Dark Mode (With Text Wrapping)](/screenshots/win11-dark-wrapped.png)
 
-### `npm dev` or `npm start`
+![Windows 11 Dark Mode](/screenshots/win11-dark.png)
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+#### Windows 11 Light Mode
+![Windows 11 Light Mode (With Text Wrapping)](/screenshots/win11-light-wrapped.png)
 
-The page will reload if you make edits.<br>
+![Windows 11 Light Mode](/screenshots/win11-light.png)
 
-### `npm run build`
+### To Do
+- [ ] Migrate Business Logic From JavaScript to Rust
+- [x] Migrate from React to SolidJS
+- [x] Migrate from BlueprintJS to TailwindCSS
+- [ ] Security Settings
+- [ ] Hotkeys
+- [x] Clean up CSS
+- [x] Test Windows
+- [x] Test MacOS
+- [x] Test Linux
+- [x] Provide User With Feedback
 
-Builds the app for production to the `dist` folder.<br>
-It correctly bundles Solid in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-## Deployment
-
-You can deploy the `dist` folder to any static host provider (netlify, surge, now, etc.)
+### Ideas
+- More Configuration
