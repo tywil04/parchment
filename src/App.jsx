@@ -226,11 +226,7 @@ export default function App() {
             </>
           :selectedSettingsTab() === "about" ?
             <>
-              <div className="flex flex-row mr-auto">
-                <button className={colouredButton("blue")} onClick={() => openInDefault("https://github.com/tywil04/tauri-notepad")}>Go To GitHub</button>
-
-                <span className={`${headerTextColour} ml-1 px-2 py-0.5`}>Notepad app written using web technologies via Tauri</span>
-              </div>
+              <button className={`${colouredButton("blue")} mr-auto`} onClick={() => openInDefault("https://github.com/tywil04/tauri-notepad")}>Go To GitHub</button>
 
               <span className={`${headerTextColour} ml-auto px-2 py-0.5`}>Platform {platformName}, Version {version}</span>
             </>

@@ -26,17 +26,10 @@ yarn
 yarn tauri build
 ```
 
-#### Windows 11 Dark Mode 
+# Screenshots
 ![Windows 11 Dark Mode (With Text Wrapping)](/screenshots/win11-dark-wrapped.png)
 
-![Windows 11 Dark Mode](/screenshots/win11-dark.png)
-
-#### Windows 11 Light Mode
-![Windows 11 Light Mode (With Text Wrapping)](/screenshots/win11-light-wrapped.png)
-
-![Windows 11 Light Mode](/screenshots/win11-light.png)
-
-### To Do
+# To Do
 - [ ] Migrate Business Logic From JavaScript to Rust
 - [x] Migrate from React to SolidJS
 - [x] Migrate from BlueprintJS to TailwindCSS
@@ -48,5 +41,5 @@ yarn tauri build
 - [x] Test Linux
 - [x] Provide User With Feedback
 
-### Ideas
+# Ideas
 - More Configuration
