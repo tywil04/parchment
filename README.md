@@ -18,7 +18,7 @@ This app works on MacOS, Windows and Linux. All versions look and function the s
 # Usage
 Head to the releases page to download pre-build executables. 
 
-If you would like to build this project from scratch you will need to do the following
+If you would like to build this project from scratch you will need to do the following:
 ```
 git clone https://github.com/tywil04/tauri-notepad.git
 cd tauri-notepad
