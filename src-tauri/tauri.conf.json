@@ -15,7 +15,8 @@
       "fs": { "writeFile": true, "readFile": true },
       "os": { "all": true },
       "dialog": { "open": true, "save": true, "ask": true, "message": true },
-      "window": { "maximize": true, "unmaximize": true, "minimize": true, "unminimize": true, "close": true, "startDragging": true, "center": true, "setResizable": true }
+      "window": { "maximize": true, "unmaximize": true, "minimize": true, "unminimize": true, "close": true, "startDragging": true },
+      "shell": { "open": true }
     },
     "bundle": {
       "active": true,

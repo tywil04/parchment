@@ -3,19 +3,30 @@ import { createSignal } from "solid-js";
 import { appWindow } from "@tauri-apps/api/window";
 import { save as saveDialog, open as openDialog, ask as askDialog, message } from "@tauri-apps/api/dialog"
 import { readTextFile, writeFile } from "@tauri-apps/api/fs";
-import { type } from "@tauri-apps/api/os";
+import { open as openInDefault } from '@tauri-apps/api/shell';
+
+if (window.matchMedia('(prefers-color-scheme: dark)').matches === true) {
+  document.querySelector("html").classList.add("dark");
+}
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener("change", event => {
+  if (event.matches) {
+    document.querySelector("html").classList.add("dark");
+  } else {
+    document.querySelector("html").classList.remove("dark");
+  }
+})
 
 export default function App() {
   const [selectedSettingsTab, setSelectedSettingsTab] = createSignal("display")
-  const [theme, setTheme] = createSignal("dark");
   const [textEdited, setTextEdited] = createSignal(false);
   const [currentFilePath, setCurrentFilePath] = createSignal("");
   const [textWrapEnabled, setTextWrapEnabled] = createSignal(false);
 
-  const regularButton = "rounded px-2 py-0.5 text-sm ring-1 duration-[50ms] hover:shadow select-none w-fit h-fit bg-gray-100 text-black ring-gray-200 hover:shadow-gray-200 active:bg-gray-200 dark:bg-gray-800 dark:text-white dark:ring-gray-700 dark:hover:shadow-gray-700 dark:active:bg-gray-700";
-  const minimalButton = "rounded px-2 py-0.5 text-sm ring-1 duration-[50ms] hover:shadow select-none w-fit h-fit bg-transparent text-black ring-transparent hover:ring-gray-200 hover:bg-gray-100 active:bg-gray-200 active:ring-gray-200 dark:text-white dark:hover:ring-gray-700 dark:hover:bg-gray-800 dark:active:bg-gray-700 dark:active:ring-gray-700";
-  const colouredButton = colour => `rounded px-2 py-0.5 text-sm ring-1 duration-[50ms] hover:shadow select-none w-fit h-fit bg-${colour}-500 text-white ring-${colour}-600 hover:shadow-${colour}-600 active:bg-${colour}-600 dark:bg-${colour}-700 dark:ring-${colour}-600 dark:hover:shadow-${colour}-600 dark:active:bg-${colour}-600`;
-  const colouredMinimalButton = colour => `rounded px-2 py-0.5 text-sm ring-1 duration-[50ms] hover:shadow select-none w-fit h-fit bg-transparent text-black ring-transparent hover:shadow-none hover:ring-${colour}-600 hover:bg-${colour}-500 active:bg-${colour}-600 dark:text-white dark:hover:ring-${colour}-600 dark:hover:bg-${colour}-700 dark:active:bg-${colour}-600`
+  const regularButton = "disabled:pointer-events-none disabled:opacity-50 rounded px-2 py-0.5 text-sm ring-1 duration-[50ms] hover:shadow select-none w-fit h-fit bg-gray-100 text-black ring-gray-200 hover:shadow-gray-200 active:bg-gray-200 dark:bg-gray-800 dark:text-white dark:ring-gray-700 dark:hover:shadow-gray-700 dark:active:bg-gray-700";
+  const minimalButton = "disabled:pointer-events-none disabled:opacity-50 rounded px-2 py-0.5 text-sm ring-1 duration-[50ms] hover:shadow select-none w-fit h-fit bg-transparent text-black ring-transparent hover:ring-gray-200 hover:bg-gray-100 active:bg-gray-200 active:ring-gray-200 dark:text-white dark:hover:ring-gray-700 dark:hover:bg-gray-800 dark:active:bg-gray-700 dark:active:ring-gray-700";
+  const colouredButton = colour => `disabled:pointer-events-none disabled:opacity-50 rounded px-2 py-0.5 text-sm ring-1 duration-[50ms] hover:shadow select-none w-fit h-fit bg-${colour}-500 text-white ring-${colour}-600 hover:shadow-${colour}-600 active:bg-${colour}-600 dark:bg-${colour}-700 dark:ring-${colour}-600 dark:hover:shadow-${colour}-600 dark:active:bg-${colour}-600`;
+  const colouredMinimalButton = colour => `disabled:pointer-events-none disabled:opacity-50 rounded px-2 py-0.5 text-sm ring-1 duration-[50ms] hover:shadow select-none w-fit h-fit bg-transparent text-black ring-transparent hover:shadow-none hover:ring-${colour}-600 hover:bg-${colour}-500 active:bg-${colour}-600 active:ring-${colour}-600 dark:text-white dark:hover:ring-${colour}-600 dark:hover:bg-${colour}-700 dark:active:ring-${colour}-600 dark:active:bg-${colour}-600`
 
   const settingsSelectedStyle = "w-fit ml-1 px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-t border border-gray-200 dark:border-gray-700 border-b-0 z-10";
   const settingsUnselectedStyle = "w-fit px-2 py-1 m-[1px] ml-[5px] cursor-pointer font-thin";
@@ -35,7 +46,7 @@ export default function App() {
   const getFileNameFromPath = (filePath) => filePath.replace(/^.*(\\|\/|\:)/, "");
 
   const notImplemented = () => {
-    message("This application is still in development and this feature is not implemented yet. This button is a placeholder.");
+    message("This application is still in development and this feature is not implemented yet. This button is a placeholder. This feature may not even be implemented at all.");
   }
 
   const discardQuery = (good, badToastMessage) => {
@@ -129,12 +140,17 @@ export default function App() {
     <div class="flex flex-col flex-grow h-full">
       <div data-tauri-drag-region className="flex flex-row p-2 space-x-2 border-gray-200 dark:border-gray-700 bg-gray-100/50 dark:bg-gray-800/50 w-[100%] fixed">
         <div className="flex flex-row whitespace-nowrap mr-auto">
-          <button className={`${minimalButton} ${headerTextColour} font-semibold`} onClick={openFile}>Open</button>
-          <div class="w-[1px] bg-gray-700 !m-2 !my-1"/>
-          <button className={`${minimalButton} ${headerTextColour} font-semibold`} onClick={newFile}>New</button>
-          <div class="w-[1px] bg-gray-700 !m-2 !my-1"/>
-          <button className={`${minimalButton} ${headerTextColour} font-semibold`} onClick={saveFile}>Save</button>
-          <button className={`${minimalButton} ${headerTextColour} font-semibold`} onClick={saveFileAs}>Save as</button>
+          
+          <button className={`${colouredMinimalButton("blue")} ${headerTextColour} font-semibold hover:!text-gray-200`} onClick={openFile}>Open</button>
+
+          <div class="w-[1px] bg-gray-200 dark:bg-gray-700 !m-2 !my-1"/>
+
+          <button className={`${colouredMinimalButton("blue")} ${headerTextColour} font-semibold hover:!text-gray-200`} onClick={newFile}>New</button>
+
+          <div class="w-[1px] bg-gray-200 dark:bg-gray-700 !m-2 !my-1"/>
+
+          <button className={`${colouredMinimalButton("blue")} ${headerTextColour} font-semibold hover:!text-gray-200`} onClick={saveFile}>Save</button>
+          <button className={`${colouredMinimalButton("blue")} ${headerTextColour} font-semibold hover:!text-gray-200`} onClick={saveFileAs}>Save as</button>
         </div>
 
         <div className="flex flex-row whitespace-nowrap ml-auto space-x-0.5">
@@ -144,8 +160,8 @@ export default function App() {
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
           </button>
-          <button className={`!p-1 ${colouredMinimalButton("yellow")}`} onClick={() => appWindow.toggleMaximize()}>
-            <svg className={`h-4 w-4 ${headerTextColour}`} viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <button className={`!p-1.5 ${colouredMinimalButton("yellow")}`} onClick={() => appWindow.toggleMaximize()}>
+            <svg className={`h-3 w-3 ${headerTextColour}`} viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
               <rect x="4" y="4" width="16" height="16" rx="2" />
             </svg>
@@ -165,16 +181,53 @@ export default function App() {
           <div className="flex !flex-row mr-auto">
             <span className={selectedSettingsTab() === "display" ? settingsSelectedStyle: settingsUnselectedStyle} onClick={() => setSelectedSettingsTab("display")}>Display</span>
             <span className={selectedSettingsTab() === "security" ? settingsSelectedStyle: settingsUnselectedStyle} onClick={() => setSelectedSettingsTab("security")}>Security</span>
-            <span className={selectedSettingsTab() === "theme" ? settingsSelectedStyle: settingsUnselectedStyle} onClick={() => setSelectedSettingsTab("theme")}>Theme</span>
+            <span className={selectedSettingsTab() === "settings" ? settingsSelectedStyle: settingsUnselectedStyle} onClick={() => setSelectedSettingsTab("settings")}>Settings</span>
+            <span className={selectedSettingsTab() === "about" ? settingsSelectedStyle: settingsUnselectedStyle} onClick={() => setSelectedSettingsTab("about")}>About</span>
           </div>
           <div className="flex flex-row ml-auto">
             <span ref={fileNameDisplay} className={`w-fit px-1.5 py-1 m-[1px] truncate ${textEdited() ? "italic": ""}`}>Untitled</span>
-            <div class="w-[1px] bg-gray-700 !m-1 !my-2"/>
+            
+            <div class="w-[1px] bg-gray-200 dark:bg-gray-700 !m-1 !my-2"/>
+
             <span ref={statsDisplay} className="w-fit px-1.5 py-1 m-[1px] truncate font-thin">0 Words, 0 Chars</span>
           </div>
         </div>
-        <div className="bg-gray-100 dark:bg-gray-800 -mt-[1px] border-y border-gray-200 dark:border-gray-700 px-2 py-2">
-          <button className={`${minimalButton} ${headerTextColour}`} onClick={() => setTextWrapEnabled(!textWrapEnabled())}>{textWrapEnabled() ? "Disable": "Enable"} Text Wrap</button>
+        <div className="flex flex-row whitespace-nowrap overflow-auto bg-gray-100 dark:bg-gray-800 -mt-[1px] border-y border-gray-200 dark:border-gray-700 px-2 py-2">
+          {selectedSettingsTab() === "display" ?
+            <>
+              <button className={`${minimalButton} ${headerTextColour}`} onClick={() => setTextWrapEnabled(!textWrapEnabled())}>{textWrapEnabled() ? "Disable": "Enable"} Text Wrap</button>
+          
+              <div class="w-[1px] bg-gray-200 dark:bg-gray-700 !m-1.5 !my-1"/>
+
+              <button className={`${minimalButton} ${headerTextColour}`} onClick={() => textEditor.classList.add("font-sans")}>Sans</button>
+              <button className={`${minimalButton} ${headerTextColour} font-serif`} onClick={() => textEditor.classList.add("font-serif")}>Serif</button>
+              <button className={`${minimalButton} ${headerTextColour} font-mono`} onClick={() => textEditor.classList.add("font-mono")}>Mono</button>
+
+              <div class="w-[1px] bg-gray-200 dark:bg-gray-700 !m-1.5 !my-1"/>
+
+              <button className={`${minimalButton} ${headerTextColour}`} onClick={notImplemented}>Preview as Markdown</button>
+            </>
+          :selectedSettingsTab() === "security" ?
+            <>
+              <button className={`${minimalButton} ${headerTextColour}`} onClick={notImplemented}>Encrypt</button>
+              <button className={`${minimalButton} ${headerTextColour}`} onClick={notImplemented}>Calculate Signature</button>
+            </>
+          :selectedSettingsTab() === "settings" ?
+            <>
+              <button className={`${minimalButton} ${headerTextColour}`} onClick={() => document.querySelector("html").classList.add("dark")}>Dark Mode</button>
+              <button className={`${minimalButton} ${headerTextColour}`} onClick={() => document.querySelector("html").classList.remove("dark")}>Light Mode</button>
+            </>
+          :selectedSettingsTab() === "about" ?
+            <>
+              <div className="flex flex-row mr-auto">
+                <button className={colouredButton("blue")} onClick={() => openInDefault("https://github.com/tywil04/tauri-notepad")}>Go To GitHub</button>
+
+                <span className={`${headerTextColour} ml-1 px-2 py-0.5`}>Notepad app written using web technologies via Tauri</span>
+              </div>
+
+              <span className={`${headerTextColour} ml-auto px-2 py-0.5`}>Version 0.1.0</span>
+            </>
+          :null}
         </div>
       </div>
 
