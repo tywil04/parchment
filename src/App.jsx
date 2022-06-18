@@ -4,6 +4,13 @@ import { appWindow } from "@tauri-apps/api/window";
 import { save as saveDialog, open as openDialog, ask as askDialog, message } from "@tauri-apps/api/dialog"
 import { readTextFile, writeFile } from "@tauri-apps/api/fs";
 import { open as openInDefault } from '@tauri-apps/api/shell';
+import { type } from "@tauri-apps/api/os";
+import { getVersion } from "@tauri-apps/api/app"
+
+let platformName = "";
+let version = "";
+type().then(data => platformName = data);
+getVersion().then(data => version = data);
 
 if (window.matchMedia('(prefers-color-scheme: dark)').matches === true) {
   document.querySelector("html").classList.add("dark");
@@ -225,7 +232,7 @@ export default function App() {
                 <span className={`${headerTextColour} ml-1 px-2 py-0.5`}>Notepad app written using web technologies via Tauri</span>
               </div>
 
-              <span className={`${headerTextColour} ml-auto px-2 py-0.5`}>Version 0.1.0</span>
+              <span className={`${headerTextColour} ml-auto px-2 py-0.5`}>Platform {platformName}, Version {version}</span>
             </>
           :null}
         </div>
