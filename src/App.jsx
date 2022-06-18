@@ -38,7 +38,7 @@ export default function App() {
   const settingsSelectedStyle = "w-fit ml-1 px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-t border border-gray-200 dark:border-gray-700 border-b-0 z-10";
   const settingsUnselectedStyle = "w-fit px-2 py-1 m-[1px] ml-[5px] cursor-pointer font-thin";
 
-  const headerTextColour = "!text-gray-700 dark:!text-gray-300 select-none";
+  const headerTextColour = "!text-gray-700 dark:!text-gray-300 select-none truncate";
 
   let textEditor;
   let statsDisplay;
@@ -228,7 +228,7 @@ export default function App() {
             <>
               <button className={`${colouredButton("blue")} mr-auto`} onClick={() => openInDefault("https://github.com/tywil04/tauri-notepad")}>Go To GitHub</button>
 
-              <span className={`${headerTextColour} ml-auto px-2 py-0.5`}>Platform {platformName}, Version {version}</span>
+              <span className={`${headerTextColour} ml-auto px-2 py-0.5`}>Platform: {platformName}, Version: {version}</span>
             </>
           :null}
         </div>
