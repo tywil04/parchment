@@ -27,7 +27,8 @@ yarn tauri build
 ```
 
 # Screenshots
-![Windows 11 Dark Mode (With Text Wrapping)](/screenshots/win11-dark-wrapped.png)
+![Windows 11 Dark Mode](/screenshots/windows11-dark.png)
+![Windows 11 Light Mode](/screenshots/windows11-light.png)
 
 # To Do
 - [ ] Migrate Business Logic From JavaScript to Rust
