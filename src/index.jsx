@@ -2,6 +2,6 @@
 import { render } from 'solid-js/web';
 import "tailwindcss/tailwind.css";
 import './index.css';
-import App from './App';
+import Notepad from './Notepad';
 
-render(() => <App/>, document.getElementById('root'));
+render(() => <Notepad/>, document.getElementById('root'));
