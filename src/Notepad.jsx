@@ -77,7 +77,8 @@ export default function App() {
         () => {
           fileNameDisplay.innerText = getFileNameFromPath(filePath);
           setCurrentFilePath(filePath);
-          setTextEdited(false)
+          setTextEdited(false);
+          setStartingState(textEditor.value);
         },
         () => message("Error while saving, please try again."));
     }, 
@@ -90,6 +91,7 @@ export default function App() {
         writeFile({contents: textEditor.value, path: currentFilePath()}).then(
           () => {
             setTextEdited(false);
+            setStartingState(textEditor.value);
             success();
           },
           () => {
