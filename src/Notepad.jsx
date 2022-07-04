@@ -25,7 +25,8 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener("change", eve
 })
 
 export default function App() {
-  const [selectedSettingsTab, setSelectedSettingsTab] = createSignal("display")
+  const [selectedSettingsTab, setSelectedSettingsTab] = createSignal("display");
+  const [startingState, setStartingState] = createSignal("");
   const [textEdited, setTextEdited] = createSignal(false);
   const [currentFilePath, setCurrentFilePath] = createSignal("");
   const [textWrapEnabled, setTextWrapEnabled] = createSignal(false);
@@ -48,6 +49,10 @@ export default function App() {
     var words = textEditor.value.trim().replace("\n", " ").split(/(\s+)/).filter((word) => word.trim().length > 0).length;
     var characters = textEditor.value.replace("\n", "").replace(" ", "").length;
     statsDisplay.innerText = `${words} Words, ${characters} Characters`;
+
+    setTextEdited(!(textEditor.value === startingState()));
+
+    console.log(textEdited())
   }
   
   const getFileNameFromPath = (filePath) => filePath.replace(/^.*(\\|\/|\:)/, "");
@@ -100,6 +105,7 @@ export default function App() {
 
   const clear = () => {
     textEditor.value = "";
+    setStartingState("")
     setCurrentFilePath("");
     fileNameDisplay.innerText = "";
     setTextEdited(false);
@@ -118,6 +124,7 @@ export default function App() {
     clear(); // Clear all
     return openDialog().then((filePath) => {
       readTextFile(filePath).then((text) => {
+        setStartingState(text);
         textEditor.value = text;
         setCurrentFilePath(filePath);
         fileNameDisplay.innerText = getFileNameFromPath(filePath);
@@ -148,16 +155,16 @@ export default function App() {
       <div data-tauri-drag-region className="flex flex-row p-2 space-x-2 border-gray-200 dark:border-gray-700 bg-gray-100/50 dark:bg-gray-800/50 w-[100%] fixed">
         <div className="flex flex-row whitespace-nowrap mr-auto">
           
-          <button className={`${colouredMinimalButton("blue")} ${headerTextColour} font-semibold hover:!text-gray-200`} onClick={openFile}>Open</button>
+          <button className={`${minimalButton} ${headerTextColour} font-semibold hover:!text-gray-200`} onClick={openFile}>Open</button>
 
           <div class="w-[1px] bg-gray-200 dark:bg-gray-700 !m-2 !my-1"/>
 
-          <button className={`${colouredMinimalButton("blue")} ${headerTextColour} font-semibold hover:!text-gray-200`} onClick={newFile}>New</button>
+          <button className={`${minimalButton} ${headerTextColour} font-semibold hover:!text-gray-200`} onClick={newFile}>New</button>
 
           <div class="w-[1px] bg-gray-200 dark:bg-gray-700 !m-2 !my-1"/>
 
-          <button className={`${colouredMinimalButton("blue")} ${headerTextColour} font-semibold hover:!text-gray-200`} onClick={saveFile}>Save</button>
-          <button className={`${colouredMinimalButton("blue")} ${headerTextColour} font-semibold hover:!text-gray-200`} onClick={saveFileAs}>Save as</button>
+          <button className={`${minimalButton} ${headerTextColour} font-semibold hover:!text-gray-200`} onClick={saveFile}>Save</button>
+          <button className={`${minimalButton} ${headerTextColour} font-semibold hover:!text-gray-200`} onClick={saveFileAs}>Save as</button>
         </div>
 
         <div className="flex flex-row whitespace-nowrap ml-auto space-x-0.5">
@@ -192,7 +199,17 @@ export default function App() {
             <span className={selectedSettingsTab() === "about" ? settingsSelectedStyle: settingsUnselectedStyle} onClick={() => setSelectedSettingsTab("about")}>About</span>
           </div>
           <div className="flex flex-row ml-auto">
-            <span ref={fileNameDisplay} className={`w-fit px-1.5 py-1 m-[1px] truncate ${textEdited() ? "italic": ""}`}>Untitled</span>
+            <span ref={fileNameDisplay} className="w-fit px-1.5 py-1 m-[1px] truncate">
+              {textEdited() ?
+                <i>
+                  Untitled
+                </i>  
+              :
+                <>
+                  Untitled
+                </>
+              }
+            </span>
             
             <div class="w-[1px] bg-gray-200 dark:bg-gray-700 !m-1 !my-2"/>
 
