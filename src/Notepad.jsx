@@ -153,7 +153,7 @@ export default function App() {
   }
 
   return (
-    <div class="flex flex-col flex-grow h-full">
+    <div class="flex flex-col flex-grow h-full border border-gray-200 dark:border-gray-700">
       <div data-tauri-drag-region className="flex flex-row p-2 space-x-2 border-gray-200 dark:border-gray-700 bg-gray-100/50 dark:bg-gray-800/50 w-[100%] fixed">
         <div className="flex flex-row whitespace-nowrap mr-auto">
           
