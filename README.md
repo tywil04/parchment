@@ -1,24 +1,24 @@
 # Tauri Notepad
+A minimal text editor written using web technologies for Windows, Linux and MacOS
 
-### Warning: Its only in a minimal working state
-
-A minimal text editor 
-
-This project uses the following:
+Thanks to the following:
 - SolidJS for a very performant and lightweight application
-- TailwindCSS to style
-- Tauri a Rust wrapper to create desktop applications using web technologies
+- TailwindCSS to allow for simple styling of the application
+- Tauri - a rust wrapper that allows you to create fast and secure desktop applications using web technologies
 - Uses this [Notepad](https://www.flaticon.com/free-icon/notebook_346081?related_id=346081&origin=search) icon from Flaticon (free to use for personal and commercial purposes) for the taskbar icon.
-- A few [Tabler Icons](https://tablericons.com/) e.g for window control
+- A few [Tabler Icons](https://tablericons.com/) for the window control buttons
 
-This app currently doesn't follow Tauri's best practices. All of the business logic is implemented in the same place as the UI logic, this is bad design is classified as insecure. I will be changing this soon.
-
-This app works on MacOS, Windows and Linux. All versions look and function the same. The only difference is that MacOS has the window controls on the left.
+This app should work on Windows, MacOS and Linux however it only has been tested on Windows. 
 
 # Usage
 Head to the releases page to download pre-build executables. 
 
-If you would like to build this project from scratch you will need to do the following:
+If you would like to build this project from scratch take a look at the building section.
+
+# Building
+*Please note: Tauri currently does not support cross-platform building. You can only build for the specific os and architecture your machine is.
+
+Building this app is very simple:
 ```
 git clone https://github.com/tywil04/tauri-notepad.git
 cd tauri-notepad
@@ -26,21 +26,8 @@ yarn
 yarn tauri build
 ```
 
+Once the build has been completed, you will find the executables in src-tauri/target/release/bundle
+
 # Screenshots
 ![Windows 11 Dark Mode](/screenshots/windows11-dark.png)
 ![Windows 11 Light Mode](/screenshots/windows11-light.png)
-
-# To Do
-- [ ] Migrate Business Logic From JavaScript to Rust
-- [x] Migrate from React to SolidJS
-- [x] Migrate from BlueprintJS to TailwindCSS
-- [ ] Security Settings
-- [ ] Hotkeys
-- [x] Clean up CSS
-- [x] Test Windows
-- [x] Test MacOS
-- [x] Test Linux
-- [x] Provide User With Feedback
-
-# Ideas
-- More Configuration
