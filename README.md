@@ -16,7 +16,7 @@ Head to the releases page to download pre-build executables.
 If you would like to build this project from scratch take a look at the building section.
 
 # Building
-*Please note: Tauri currently does not support cross-platform building. You can only build for the specific os and architecture your machine is.
+*Please note: Tauri currently does not support cross-platform building. You can only build for the specific os and architecture your machine is.*
 
 Building this app is very simple:
 ```
