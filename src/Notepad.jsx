@@ -57,10 +57,6 @@ export default function App() {
   
   const getFileNameFromPath = (filePath) => filePath.replace(/^.*(\\|\/|\:)/, "");
 
-  const notImplemented = () => {
-    message("This application is still in development and this feature is not implemented yet. This button is a placeholder. This feature may not even be implemented at all.");
-  }
-
   const discardQuery = (good, badToastMessage) => {
     askDialog("Would you like to discard your work?").then((yes) => {
       if (yes) {
@@ -196,8 +192,7 @@ export default function App() {
         <div data-tauri-drag-region className="flex flex-row px-1 w-[100%]">
           <div className="flex !flex-row mr-auto">
             <span className={selectedSettingsTab() === "display" ? settingsSelectedStyle: settingsUnselectedStyle} onClick={() => setSelectedSettingsTab("display")}>Display</span>
-            <span className={selectedSettingsTab() === "security" ? settingsSelectedStyle: settingsUnselectedStyle} onClick={() => setSelectedSettingsTab("security")}>Security</span>
-            <span className={selectedSettingsTab() === "settings" ? settingsSelectedStyle: settingsUnselectedStyle} onClick={() => setSelectedSettingsTab("settings")}>Settings</span>
+            <span className={selectedSettingsTab() === "theme" ? settingsSelectedStyle: settingsUnselectedStyle} onClick={() => setSelectedSettingsTab("theme")}>Theme</span>
             <span className={selectedSettingsTab() === "about" ? settingsSelectedStyle: settingsUnselectedStyle} onClick={() => setSelectedSettingsTab("about")}>About</span>
           </div>
           <div className="flex flex-row ml-auto">
@@ -228,17 +223,8 @@ export default function App() {
               <button className={`${minimalButton} ${headerTextColour}`} onClick={() => textEditor.classList.add("font-sans")}>Sans</button>
               <button className={`${minimalButton} ${headerTextColour} font-serif`} onClick={() => textEditor.classList.add("font-serif")}>Serif</button>
               <button className={`${minimalButton} ${headerTextColour} font-mono`} onClick={() => textEditor.classList.add("font-mono")}>Mono</button>
-
-              <div class="w-[1px] bg-gray-200 dark:bg-gray-700 !m-1.5 !my-1"/>
-
-              <button className={`${minimalButton} ${headerTextColour}`} onClick={notImplemented}>Preview as Markdown</button>
             </>
-          :selectedSettingsTab() === "security" ?
-            <>
-              <button className={`${minimalButton} ${headerTextColour}`} onClick={notImplemented}>Encrypt</button>
-              <button className={`${minimalButton} ${headerTextColour}`} onClick={notImplemented}>Calculate Signature</button>
-            </>
-          :selectedSettingsTab() === "settings" ?
+          :selectedSettingsTab() === "theme" ?
             <>
               <button className={`${minimalButton} ${headerTextColour}`} onClick={() => document.querySelector("html").classList.add("dark")}>Dark Mode</button>
               <button className={`${minimalButton} ${headerTextColour}`} onClick={() => document.querySelector("html").classList.remove("dark")}>Light Mode</button>
