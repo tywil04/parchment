@@ -29,5 +29,8 @@ yarn tauri build
 Once the build has been completed, you will find the executables in src-tauri/target/release/bundle
 
 # Screenshots
+
+*These screen shots are out of date, some of the settings are no longer present. The app still looks the same, however.*
+
 ![Windows 11 Dark Mode](/screenshots/windows11-dark.png)
 ![Windows 11 Light Mode](/screenshots/windows11-light.png)
