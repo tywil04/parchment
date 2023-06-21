@@ -1,10 +1,10 @@
 [package]
 name = "tauri-notepad"
-version = "0.1.0"
+version = "1.0.0"
 description = "A Lightweight Notepad Application"
 authors = ["you"]
-license = ""
-repository = ""
+license = "mit"
+repository = "github.com/tywil04/tauri-notepad"
 default-run = "tauri-notepad"
 edition = "2021"
 rust-version = "1.57"
