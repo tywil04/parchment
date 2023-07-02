@@ -14,14 +14,7 @@ This app should work on Windows, MacOS and Linux however it only has been tested
 Head to the releases page to download pre-built executables. If you want you can build it, please follow the building section below.
 
 # Building
-Before you build, you need to have the following installed and configured:
-```
-rust
-cargo (rust)
-tauri
-nodejs
-yarn (npm package manager that I use)
-```
+Before you build, you need to have everything required installed follow this [guide](https://tauri.app/v1/guides/getting-started/prerequisites#installing) to install Tauri and its dependencies. 
 
 Once everything needed is installed, building this app is very simple:
 ```
