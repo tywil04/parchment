@@ -1,5 +1,5 @@
 # Parchment
-Parchment is a minimal minimal text editor written using web technologies for Windows, Linux and MacOS.
+Parchment is a minimal text editor written using web technologies for Windows, Linux and MacOS.
 
 Special thanks to the following libraries and assets:
 - [SolidJS](https://www.solidjs.com/) - for a very performant and lightweight javascript framework
