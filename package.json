@@ -1,7 +1,8 @@
 {
-  "name": "tauri-notepad",
+  "name": "parchment",
+  "author": "Tyler Williams <github.public.6d2617ee@alias.tylerw.co.uk> (https://github.com/tywil04)",
   "version": "1.0.0",
-  "description": "",
+  "description": "A minimal text editor written using web technologies for Windows, Linux and MacOS",
   "scripts": {
     "start": "vite",
     "dev": "vite",
@@ -9,7 +10,7 @@
     "serve": "vite preview",
     "tauri": "tauri"
   },
-  "license": "MIT",
+  "license": "GPL-3.0",
   "devDependencies": {
     "@tauri-apps/cli": "^1.0.0",
     "autoprefixer": "^10.4.7",

@@ -1,11 +1,11 @@
 [package]
-name = "tauri-notepad"
+name = "parchment"
 version = "1.0.0"
-description = "A Lightweight Notepad Application"
+description = "A minimal text editor written using web technologies for Windows, Linux and MacOS"
 authors = ["you"]
 license = "mit"
-repository = "github.com/tywil04/tauri-notepad"
-default-run = "tauri-notepad"
+repository = "github.com/tywil04/parchment"
+default-run = "parchment"
 edition = "2021"
 rust-version = "1.57"
 
