@@ -2,6 +2,9 @@
 import { render } from 'solid-js/web';
 import "tailwindcss/tailwind.css";
 import './index.css';
-import Notepad from './Parchment.jsx';
+import Parchment from './Parchment.jsx';
 
-render(() => <Notepad/>, document.getElementById('root'));
+render(
+  () => <Parchment/>, 
+  document.getElementById('root')
+);
