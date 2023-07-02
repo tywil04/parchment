@@ -7,8 +7,8 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "Notepad",
-    "version": "0.1.0"
+    "productName": "Parchment",
+    "version": "1.0.0"
   },
   "tauri": {
     "allowlist": {
@@ -33,7 +33,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tywil.taurinotepad",
+      "identifier": "com.tywil04.Parchment",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -63,7 +63,7 @@
         "fullscreen": false,
         "height": 760,
         "resizable": true,
-        "title": "Notepad",
+        "title": "Parchment",
         "width": 580,
         "decorations": false,
         "transparent": true
