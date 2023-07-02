@@ -24,7 +24,7 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener("change", eve
   }
 })
 
-export default function App() {
+export default function Parchment() {
   const [selectedSettingsTab, setSelectedSettingsTab] = createSignal("display");
   const [startingState, setStartingState] = createSignal("");
   const [textEdited, setTextEdited] = createSignal(false);
