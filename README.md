@@ -18,6 +18,7 @@ Before you build, you need to have the following installed and configured:
 ```
 rust
 cargo (rust)
+tauri
 nodejs
 yarn (npm package manager that I use)
 ```
