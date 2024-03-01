@@ -27,5 +27,4 @@ npm run tauri build
 Once the build has been completed, you will find the executables in src-tauri/target/release/bundle
 
 # Screenshots
-![Windows 11 Dark Mode](/screenshots/windows11-dark.png)
-![Windows 11 Light Mode](/screenshots/windows11-light.png)
+![Parchment Text Editor](/parchment.webp)
