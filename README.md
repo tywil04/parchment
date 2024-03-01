@@ -20,8 +20,8 @@ Once everything needed is installed, building this app is very simple:
 ```
 git clone https://github.com/tywil04/parchment.git
 cd parchment
-yarn
-yarn tauri build
+npm install
+npm run tauri build
 ```
 
 Once the build has been completed, you will find the executables in src-tauri/target/release/bundle
