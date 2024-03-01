@@ -13,26 +13,10 @@ html, body, #root {
   @apply overflow-hidden
 }
 
-::-webkit-scrollbar {
-  @apply w-[14px] h-[14px] absolute
+* {
+  scrollbar-color: rgb(196, 196, 196) rgb(249, 250, 251);
 }
 
-::-webkit-scrollbar-thumb {
-  @apply bg-gray-100 dark:bg-gray-900 rounded-none
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-gray-50 dark:bg-gray-800
-}
-
-::-webkit-scrollbar-track:vertical, ::-webkit-scrollbar-thumb:vertical, ::-webkit-scrollbar-corner {
-  border-left: 1px solid rgb(55 65 81);
-}
-
-::-webkit-scrollbar-track:horizontal, ::-webkit-scrollbar-thumb:horizontal, ::-webkit-scrollbar-corner {
-  border-top: 1px solid rgb(55 65 81);
-}
-
-::-webkit-scrollbar-corner {
-  @apply bg-gray-50 dark:bg-gray-800
+:is(.dark ) * {
+  scrollbar-color: rgb(11, 18, 27) rgb(31, 41, 55);
 }
